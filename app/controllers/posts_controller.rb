@@ -2,12 +2,12 @@ class PostsController < ApplicationController
 
   def index
     @posts = Post.all
-    render json: @posts.to_json(:include => [:user, :comments => {:include => :user}])
+    render json: @posts.to_json(:include => [:user, {:comments => {:include => :user}}, {:likes => {:include => :user}}])
   end
 
   def show
     @post = Post.find(params[:id])
-    render json: @post.to_json(:include => [:user, :comments => {:include => :user}])
+    render json: @post.to_json(:include => [:user, {:comments => {:include => :user}}, {:likes => {:include => :user}}])
   end
 
   def new
@@ -17,11 +17,7 @@ class PostsController < ApplicationController
   def create
     @post = Post.new(post_params)
     if @post.save
-      #@user = User.find(@post.user_id)
-      #respond_to do |format|
-      #  format.json{render json: {:post => @post, :user => @user}}
-      #end
-      render json: @post.to_json(:include => [:user, :comments => {:include => :user}])
+      render json: @post.to_json(:include => [:user, {:comments => {:include => :user}}, {:likes => {:include => :user}}])
     end
   end
 

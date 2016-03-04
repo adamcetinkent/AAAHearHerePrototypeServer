@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160302005618) do
+ActiveRecord::Schema.define(version: 20160304164339) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -22,7 +22,27 @@ ActiveRecord::Schema.define(version: 20160302005618) do
     t.string   "message"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "deleted_at"
   end
+
+  add_index "comments", ["deleted_at"], name: "index_comments_on_deleted_at", using: :btree
+
+  create_table "like_posts", force: :cascade do |t|
+    t.integer  "post_id"
+    t.integer  "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "likes", force: :cascade do |t|
+    t.integer  "post_id"
+    t.integer  "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.datetime "deleted_at"
+  end
+
+  add_index "likes", ["deleted_at"], name: "index_likes_on_deleted_at", using: :btree
 
   create_table "posts", force: :cascade do |t|
     t.integer  "user_id"
@@ -32,7 +52,10 @@ ActiveRecord::Schema.define(version: 20160302005618) do
     t.string   "message"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "deleted_at"
   end
+
+  add_index "posts", ["deleted_at"], name: "index_posts_on_deleted_at", using: :btree
 
   create_table "tokens", force: :cascade do |t|
     t.datetime "expires"
@@ -47,10 +70,12 @@ ActiveRecord::Schema.define(version: 20160302005618) do
     t.string   "first_name"
     t.string   "last_name"
     t.string   "email"
-    t.string   "img_url"
     t.string   "fb_user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.datetime "deleted_at"
   end
+
+  add_index "users", ["deleted_at"], name: "index_users_on_deleted_at", using: :btree
 
 end

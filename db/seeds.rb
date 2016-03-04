@@ -21,3 +21,10 @@ post6 = Post.create!(user_id: '3', track: '7B04VRtTs6ucHp8qJ6Nz8M', lat:'51.5311
 comment1 = Comment.create!(post_id: '1', user_id: '2', message: 'zomg first comment!')
 comment2 = Comment.create!(post_id: '1', user_id: '3', message: 'roflmao first reply!')
 comment3 = Comment.create!(post_id: '3', user_id: '1', message: 'I still remember it like it was yesterday...')
+
+like1 = Like.create(post_id: '1', user_id: '3')
+like2 = Like.create(post_id: '1', user_id: '2')
+like3 = Like.create(post_id: '2', user_id: '1')
+like4 = Like.create(post_id: '4', user_id: '1')
+like5 = Like.create(post_id: '4', user_id: '2')
+like6 = Like.create(post_id: '4', user_id: '3')

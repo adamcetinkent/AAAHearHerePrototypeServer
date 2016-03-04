@@ -46,3 +46,4 @@ group :development do
   gem 'spring'
 end
 
+gem "paranoia", :github => "radar/paranoia", :branch => "rails4"
