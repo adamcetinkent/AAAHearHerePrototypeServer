@@ -11,6 +11,8 @@ Rails.application.routes.draw do
 
   post 'users' => 'users#create'
 
+  post 'comments' => 'comments#create'
+
   #get 'auth/' => 'users#validate'
 
   # The priority is based upon order of creation: first created -> highest priority.

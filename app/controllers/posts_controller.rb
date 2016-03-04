@@ -17,7 +17,7 @@ class PostsController < ApplicationController
   def create
     @post = Post.new(post_params)
     if @post.save
-      @user = User.find(@post.user_id)
+      #@user = User.find(@post.user_id)
       #respond_to do |format|
       #  format.json{render json: {:post => @post, :user => @user}}
       #end
