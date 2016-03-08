@@ -23,7 +23,7 @@ class PostsController < ApplicationController
 
   private
   def post_params
-    params.require(:post).permit(:user_id, :track, :lat, :lon, :message)
+    params.require(:post).permit(:user_id, :track, :lat, :lon, :message, :place_name, :google_place_id)
   end
 
 end

@@ -7,7 +7,7 @@ class LikesController < ApplicationController
 
   def create
     @like = Like.new(like_params)
-    @deletedLikes = Like.only_deleted.where(post_id: @like.post_id, user_id: @like.user_id)
+    @deletedLikes = Like.with_deleted.where(post_id: @like.post_id, user_id: @like.user_id)
     if (@deletedLikes.blank?)
       puts 'NEW LIKE'
       if @like.save
@@ -22,7 +22,7 @@ class LikesController < ApplicationController
   end
 
   def delete
-    if Like.find(params[:id]).destroy
+    if Like.with_deleted.find(params[:id]).destroy
       render :nothing => true, :status => 200
     else
       render :nothing => true, :status => 400
