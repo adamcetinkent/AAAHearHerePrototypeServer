@@ -36,6 +36,41 @@ class TokensController < ApplicationController
         puts @user.to_json
 
         if @user.present?
+
+          urlFriends = "https://graph.facebook.com/v2.5/me/friends?access_token="+@token.token
+          puts "---GETTING FRIENDS---"
+          puts urlFriends
+          uriFriends = URI(urlFriends)
+          responseFriends = Net::HTTP.get_response(uriFriends)
+          puts responseFriends.code
+          case responseFriends
+          when Net::HTTPSuccess then
+             dataFriends = ActiveSupport::JSON.decode(responseFriends.body)
+             #puts "FRIENDS RESPONSE: "
+	     dataFriends['data'].each do |item|
+               #puts "->"
+               #puts item['id']
+               friendship = Friendship.new
+               friendship.user_id = @user.id
+               @friend_user = User.where(fb_user_id: item['id'])
+               if @friend_user.blank?
+                 puts "Friend with id not found!"
+               else
+                 found_friend = @friend_user.take
+                 friendship.friend_user_id = found_friend.id
+                 puts friendship.to_json
+                 @friendships = Friendship.find_by(friend_user_id: friendship.friend_user_id, user_id: friendship.user_id)
+                 if @friendships.present?
+                    puts "FRIENDSHIP ALREADY EXISTS"
+                 else
+	            friendship.save
+                 end
+               end
+             end
+          else
+             puts "ERROR GETTING FRIENDS"
+          end          
+
           render json: @user
         else
           puts "NEW USER DETECTED!"

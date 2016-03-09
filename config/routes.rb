@@ -2,19 +2,22 @@ Rails.application.routes.draw do
 
   root	 'users#index'
 
-  post	 'auth/' 	=> 'tokens#validate'
+  post	 'auth/' 		=> 'tokens#validate'
 
-  get	 'users/:id' 	=> 'users#show', as: :user
-  post	 'users' 	=> 'users#create'
+  get	 'users/:id' 		=> 'users#show'#, as: :user
+  post	 'users' 		=> 'users#create'
 
-  get	 'posts/:id' 	=> 'posts#show', as: :post
-  get	 'posts' 	=> 'posts#index'
-  post	 'posts' 	=> 'posts#create'
+  #get	 'posts/:id' 		=> 'posts#show', as: :post
+  get	 'posts' 		=> 'posts#index'
+  get	 'posts/:id' 		=> 'posts#show'
+  get    'posts/by/:user_id'    => 'posts#by_user'
+  get    'posts/for/:user_id'   => 'posts#for_user'
+  post	 'posts' 		=> 'posts#create'
 
-  post 	 'comments' 	=> 'comments#create'
+  post 	 'comments' 		=> 'comments#create'
 
-  post 	 'likes' 	=> 'likes#create'
-  delete 'likes/:id' 	=> 'likes#delete'
+  post 	 'likes' 		=> 'likes#create'
+  delete 'likes/:id' 		=> 'likes#delete'
 
   #get 'likes' => 'likes#index'
 

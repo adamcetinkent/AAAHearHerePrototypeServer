@@ -4,6 +4,7 @@ class User < ActiveRecord::Base
   has_many :posts
   has_many :comments
   has_many :likes
+  has_many :friendships
 
   def full_name
     '#{first_name} #{last_name}'
