@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160309163114) do
+ActiveRecord::Schema.define(version: 20160310001641) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -32,7 +32,10 @@ ActiveRecord::Schema.define(version: 20160309163114) do
     t.integer  "friend_user_id"
     t.datetime "created_at",     null: false
     t.datetime "updated_at",     null: false
+    t.datetime "deleted_at"
   end
+
+  add_index "friendships", ["deleted_at"], name: "index_friendships_on_deleted_at", using: :btree
 
   create_table "like_posts", force: :cascade do |t|
     t.integer  "post_id"
@@ -65,6 +68,16 @@ ActiveRecord::Schema.define(version: 20160309163114) do
   end
 
   add_index "posts", ["deleted_at"], name: "index_posts_on_deleted_at", using: :btree
+
+  create_table "tags", force: :cascade do |t|
+    t.integer  "post_id"
+    t.integer  "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.datetime "deleted_at"
+  end
+
+  add_index "tags", ["deleted_at"], name: "index_tags_on_deleted_at", using: :btree
 
   create_table "tokens", force: :cascade do |t|
     t.datetime "expires"
