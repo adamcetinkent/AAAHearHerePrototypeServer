@@ -54,9 +54,10 @@ class PostsController < ApplicationController
     if @post.save
       render json: @post.to_json(
 	:include => [
-		:user, {
-		:comments => {:include => :user}}, 
-		{:likes => {:include => :user}}
+		:user, 
+		{:comments => {:include => :user}}, 
+		{:likes => {:include => :user}},
+		{:tags => {:include => :user}}
 	])
     end
   end

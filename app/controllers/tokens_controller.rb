@@ -71,7 +71,7 @@ class TokensController < ApplicationController
              puts "ERROR GETTING FRIENDS"
           end          
 
-          render json: @user
+          render json: @user.to_json(:include => {:friendships => {:include => :friend_user } } )
         else
           puts "NEW USER DETECTED!"
           render :nothing => true, :status => 202
