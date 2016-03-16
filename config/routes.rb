@@ -14,6 +14,8 @@ Rails.application.routes.draw do
   get    'posts/for/:user_id'   => 'posts#for_user'
   post	 'posts' 		=> 'posts#create'
 
+  get    'posts/for/:user_id/at/:lat/:lng', :to => 'posts#for_user_at_location', :constraints => {:lat => /\-?\d+(.\d+)?/, :lng => /\-?\d+(.\d+)?/}
+
   post 	 'comments' 		=> 'comments#create'
 
   post 	 'likes' 		=> 'likes#create'

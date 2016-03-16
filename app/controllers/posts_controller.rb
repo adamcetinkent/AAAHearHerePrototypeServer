@@ -45,8 +45,27 @@ class PostsController < ApplicationController
 	])
   end
 
+  def for_user_at_location
+    puts "LATITUDE =>"
+    puts params[:lat]
+    puts "LONGITUDE =>"
+    puts params[:lng]
+    range = 0.001
+    lat_max = params[:lat].to_f + range
+    lat_min = params[:lat].to_f - range
+    lon_max = params[:lng].to_f + range
+    lon_min = params[:lng].to_f - range
+    friendships = User.find(params[:user_id]).friendships
+    @posts = Post.where(user_id: friendships.pluck(:friend_user_id).push(params[:user_id]), lat: lat_min...lat_max, lon: lon_min...lon_max)
+    render json:@posts.to_json(
+	:include => [
+		:user
+	])
+  end
+
   def new
     @post = Post.new
+    @post.tags.build
   end
 
   def create
@@ -64,7 +83,7 @@ class PostsController < ApplicationController
 
   private
   def post_params
-    params.require(:post).permit(:user_id, :track, :lat, :lon, :message, :place_name, :google_place_id)
+    params.require(:post).permit(:user_id, :track, :lat, :lon, :message, :place_name, :google_place_id, tags_attributes: [ :user_id ])
   end
 
 end
