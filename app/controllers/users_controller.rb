@@ -13,7 +13,7 @@ class UsersController < ApplicationController
 			{ :follows => {:include => :followed_user }}, 
 			{ :followeds => {:include => :user }}, 
 			{ :follow_requests => {:include => :requested_user }}, 
-			{ :followed_requestss => {:include => :user }} 
+			{ :followed_requests => {:include => :user }} 
 		])
   end
 

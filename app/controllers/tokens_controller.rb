@@ -8,7 +8,6 @@ class TokensController < ApplicationController
     @token = Token.new(token_params)
     
     url = "https://graph.facebook.com/debug_token?input_token="+@token.token+"&access_token=966494340087272|tmC_hhzPVAOyVxYby-anwUrYwW8"
-    #url = "https://graph.facebook.com/debug_token?input_token="+@token.token+"&access_token=966494340087272|tmC_hhzPVAOyVxYby-anwUrYwW"
 
     puts url
 

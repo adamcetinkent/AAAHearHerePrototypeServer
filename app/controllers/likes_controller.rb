@@ -11,13 +11,13 @@ class LikesController < ApplicationController
     if (@deletedLikes.blank?)
       puts 'NEW LIKE'
       if @like.save
-        render json: @like.to_json
+        render json: @like.to_json( :include => :user )
       end
     else 
       puts 'RESTORE LIKE'
       deletedLike = @deletedLikes.take
       deletedLike.restore
-      render json: deletedLike.to_json
+      render json: deletedLike.to_json( :include => :user )
     end
   end
 

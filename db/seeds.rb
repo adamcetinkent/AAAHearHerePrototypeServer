@@ -59,6 +59,7 @@ tag2 = Tag.create!(post_id: '4', user_id: '5')
 
 follow1 = Follow.create!(user_id: '1', followed_user_id: '2')
 follow2 = Follow.create!(user_id: '3', followed_user_id: '1')
+follow2 = Follow.create!(user_id: '1', followed_user_id: '6')
 
 follow_request1 = FollowRequest.create(user_id: '2', requested_user_id: '1')
 follow_request2 = FollowRequest.create(user_id: '1', requested_user_id: '4')
