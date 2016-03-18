@@ -34,8 +34,8 @@ class PostsController < ApplicationController
   end
 
   def for_user
-    friendships = User.find(params[:user_id]).friendships
-    @posts = Post.where(user_id: friendships.pluck(:friend_user_id).push(params[:user_id]))
+    follows = User.find(params[:user_id]).follows
+    @posts = Post.where(user_id: follows.pluck(:followed_user_id).push(params[:user_id]))
     render json: @posts.to_json(
 	:include => [
 		:user, 
@@ -55,8 +55,8 @@ class PostsController < ApplicationController
     lat_min = params[:lat].to_f - range
     lon_max = params[:lng].to_f + range
     lon_min = params[:lng].to_f - range
-    friendships = User.find(params[:user_id]).friendships
-    @posts = Post.where(user_id: friendships.pluck(:friend_user_id).push(params[:user_id]), lat: lat_min...lat_max, lon: lon_min...lon_max)
+    follows = User.find(params[:user_id]).follows
+    @posts = Post.where(user_id: follows.pluck(:followed_user_id).push(params[:user_id]), lat: lat_min...lat_max, lon: lon_min...lon_max)
     render json:@posts.to_json(
 	:include => [
 		:user

@@ -7,7 +7,14 @@ class UsersController < ApplicationController
 
   def show
     @user = User.find(params[:id])
-    render json: @user.to_json(:include => {:friendships => {:include => :friend_user }} )
+    render json: @user.to_json(
+		:include => [
+			{ :friendships => {:include => :friend_user }},
+			{ :follows => {:include => :followed_user }}, 
+			{ :followeds => {:include => :user }}, 
+			{ :follow_requests => {:include => :requested_user }}, 
+			{ :followed_requestss => {:include => :user }} 
+		])
   end
 
   def validate

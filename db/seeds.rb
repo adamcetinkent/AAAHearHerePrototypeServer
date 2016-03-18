@@ -56,3 +56,12 @@ like6 = Like.create!(post_id: '4', user_id: '3')
 
 tag1 = Tag.create!(post_id: '3', user_id: '1')
 tag2 = Tag.create!(post_id: '4', user_id: '5')
+
+follow1 = Follow.create!(user_id: '1', followed_user_id: '2')
+follow2 = Follow.create!(user_id: '3', followed_user_id: '1')
+
+follow_request1 = FollowRequest.create(user_id: '2', requested_user_id: '1')
+follow_request2 = FollowRequest.create(user_id: '1', requested_user_id: '4')
+follow_request3 = FollowRequest.create(user_id: '4', requested_user_id: '1')
+follow_request4 = FollowRequest.create(user_id: '5', requested_user_id: '1')
+follow_request5 = FollowRequest.create(user_id: '6', requested_user_id: '1')
