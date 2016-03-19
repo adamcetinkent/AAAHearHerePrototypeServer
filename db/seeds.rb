@@ -6,12 +6,12 @@
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
-adam1 = User.create!(first_name: 'Adam', 	last_name: 'Kent', 		email: 'adamcetinkent@gmail.com', 		fb_user_id: "10205891943610300")
-test2 = User.create!(first_name: 'Anastasia', 	last_name: 'Perkins', 		email: 'anastasia_mitdwtk_perkins@tfbnw.net', 	fb_user_id: "139926446395804")
-test3 = User.create!(first_name: 'Donna', 	last_name: 'McDonaldman', 	email: 'donna_thgunov_mcdonaldman@tfbnw.net', 	fb_user_id: "144621749258860")
-test4 = User.create!(first_name: 'Mark', 	last_name: 'Coffeee', 		email: 'mark_zifuzym_cofee@tfbnw.net', 		fb_user_id: "151343778589171")
-test5 = User.create!(first_name: 'James', 	last_name: 'East', 		email: 'james_pgwxujb_east@tfbnw.net', 		fb_user_id: "123611448031910")
-test6 = User.create!(first_name: 'Martin',	last_name: 'Martinazziman',	email: 'mike_ipmbuot_martinazziman@tfbnw.net',	fb_user_id: "143713852683546")
+adam1 = User.create!(first_name: 'Adam', 	last_name: 'Kent', 		email: 'adamcetinkent@gmail.com', 		fb_user_id: "10205891943610300",	auto_accept: '0')
+test2 = User.create!(first_name: 'Anastasia', 	last_name: 'Perkins', 		email: 'anastasia_mitdwtk_perkins@tfbnw.net', 	fb_user_id: "139926446395804",		auto_accept: '0')
+test3 = User.create!(first_name: 'Donna', 	last_name: 'McDonaldman', 	email: 'donna_thgunov_mcdonaldman@tfbnw.net', 	fb_user_id: "144621749258860",		auto_accept: '1')
+test4 = User.create!(first_name: 'Mark', 	last_name: 'Coffeee', 		email: 'mark_zifuzym_cofee@tfbnw.net', 		fb_user_id: "151343778589171",		auto_accept: '0')
+test5 = User.create!(first_name: 'James', 	last_name: 'East', 		email: 'james_pgwxujb_east@tfbnw.net', 		fb_user_id: "123611448031910",		auto_accept: '2')
+test6 = User.create!(first_name: 'Martin',	last_name: 'Martinazziman',	email: 'mike_ipmbuot_martinazziman@tfbnw.net',	fb_user_id: "143713852683546",		auto_accept: '0')
 
 friendship1_2 = Friendship.create!(user_id: '1', friend_user_id: '2')
 friendship1_3 = Friendship.create!(user_id: '1', friend_user_id: '3')
@@ -59,7 +59,7 @@ tag2 = Tag.create!(post_id: '4', user_id: '5')
 
 follow1 = Follow.create!(user_id: '1', followed_user_id: '2')
 follow2 = Follow.create!(user_id: '3', followed_user_id: '1')
-follow2 = Follow.create!(user_id: '1', followed_user_id: '6')
+#follow2 = Follow.create!(user_id: '1', followed_user_id: '6')
 
 follow_request1 = FollowRequest.create(user_id: '2', requested_user_id: '1')
 follow_request2 = FollowRequest.create(user_id: '1', requested_user_id: '4')

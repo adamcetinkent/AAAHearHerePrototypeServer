@@ -24,6 +24,7 @@ Rails.application.routes.draw do
   post	 'follows/request/'	=> 'follow_requests#create'
   post	 'follows/accept/:id'	=> 'follow_requests#accept'
   delete 'follows/refuse/:id'	=> 'follow_requests#delete'
+  delete 'follows/:id'		=> 'follows#delete'
 
   #get 'likes' => 'likes#index'
 

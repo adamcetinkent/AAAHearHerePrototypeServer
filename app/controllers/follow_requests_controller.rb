@@ -1,18 +1,38 @@
 class FollowRequestsController < ApplicationController
 
   def create
-    @request = FollowRequest.new(request_params)
-    @deletedRequests = FollowRequest.with_deleted.where(user_id: @request.user_id, requested_user_id: @request.requested_user_id)
-    if (@deletedRequests.blank?)
-      puts 'NEW REQUEST'
-      if @request.save
-        render json: @request.to_json( :include => :requested_user )
+    request = FollowRequest.new(request_params)
+
+    requested = User.find(request.requested_user_id)
+    auto = requested.auto_accept
+    puts "AUTO ACCEPT?"
+    puts auto
+    if auto == 2
+      puts "AUTO ACCEPT ALL!"
+      follow = Follow.new
+      follow.user_id = request.user_id
+      follow.followed_user_id = request.requested_user_id
+      createdFollow = Follow.createOrRestore(follow)
+      render json: createdFollow.to_json( :include => :followed_user )
+    elsif auto == 1
+      puts "AUTO ACCEPT FRIENDS"
+      @friends = Friendship.where(user_id: request.requested_user_id, friend_user_id: request.user_id)
+      if (@friends.blank?)
+        puts 'NOT FRIENDS!'
+        followRequest = FollowRequest.createOrRestore(request)
+        render json: followRequest.to_json( :include => :requested_user )
+      else
+        puts 'FRIENDS!'
+        follow = Follow.new
+        follow.user_id = request.user_id
+        follow.followed_user_id = request.requested_user_id
+        createdFollow = Follow.createOrRestore(follow)
+        render json: createdFollow.to_json( :include => :followed_user )
       end
     else
-      puts 'RESTORE REQUEST'
-      deletedRequest = @deletedRequest.take
-      deletedRequest.restore
-      render json: deletedRequest.to_json( :include => :requested_user )
+      puts "AUTO ACCEPT NONE"
+      followRequest = FollowRequest.createOrRestore(request)
+      render json: followRequest.to_json( :include => :requested_user )
     end
   end
 
