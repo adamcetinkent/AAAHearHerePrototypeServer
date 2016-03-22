@@ -1,30 +1,33 @@
 Rails.application.routes.draw do
 
-  root	 'users#index'
+  root	  'users#index'
 
-  post	 'auth/' 		=> 'tokens#validate'
+  post	  'auth/' 		          => 'tokens#validate'
 
-  get	 'users/:id' 		=> 'users#show'#, as: :user
-  post	 'users' 		=> 'users#create'
+  get	    'users/:id' 		      => 'users#show'#, as: :user
+  post	  'users' 		          => 'users#create'
+  get     'users/for/:id/search/:query',
+                            :to => 'users#search_users', :constraints => {:query => /.*/}
 
-  #get	 'posts/:id' 		=> 'posts#show', as: :post
-  get	 'posts' 		=> 'posts#index'
-  get	 'posts/:id' 		=> 'posts#show'
-  get    'posts/by/:user_id'    => 'posts#by_user'
-  get    'posts/for/:user_id'   => 'posts#for_user'
-  post	 'posts' 		=> 'posts#create'
+  #get	  'posts/:id' 		      => 'posts#show', as: :post
+  get	    'posts' 		          => 'posts#index'
+  get	    'posts/:id' 		      => 'posts#show'
+  get     'posts/by/:user_id'   => 'posts#by_user'
+  get     'posts/for/:user_id'  => 'posts#for_user'
+  post	  'posts' 		          => 'posts#create'
 
-  get    'posts/for/:user_id/at/:lat/:lng', :to => 'posts#for_user_at_location', :constraints => {:lat => /\-?\d+(.\d+)?/, :lng => /\-?\d+(.\d+)?/}
+  get     'posts/for/:user_id/at/:lat/:lng', 
+                            :to => 'posts#for_user_at_location', :constraints => {:lat => /\-?\d+(.\d+)?/, :lng => /\-?\d+(.\d+)?/}
 
-  post 	 'comments' 		=> 'comments#create'
+  post 	  'comments' 		        => 'comments#create'
 
-  post 	 'likes' 		=> 'likes#create'
-  delete 'likes/:id' 		=> 'likes#delete'
+  post 	  'likes' 		          => 'likes#create'
+  delete  'likes/:id' 		      => 'likes#delete'
 
-  post	 'follows/request/'	=> 'follow_requests#create'
-  post	 'follows/accept/:id'	=> 'follow_requests#accept'
-  delete 'follows/refuse/:id'	=> 'follow_requests#delete'
-  delete 'follows/:id'		=> 'follows#delete'
+  post	  'follows/request/'	  => 'follow_requests#create'
+  post	  'follows/accept/:id'	=> 'follow_requests#accept'
+  delete  'follows/refuse/:id'	=> 'follow_requests#delete'
+  delete  'follows/:id'		      => 'follows#delete'
 
   #get 'likes' => 'likes#index'
 

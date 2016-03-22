@@ -4,7 +4,7 @@ class FollowRequest < ActiveRecord::Base
   belongs_to :user
   has_one :requested_user, :class_name => "User", :primary_key => "requested_user_id", :foreign_key => "id"
 
-  def self.createOrRestore(request)
+  def self.create_or_restore(request)
     deletedRequest = FollowRequest.with_deleted.where(user_id: request.user_id, requested_user_id: request.requested_user_id).take
     if deletedRequest.blank?
       puts 'NEW REQUEST'
@@ -17,6 +17,10 @@ class FollowRequest < ActiveRecord::Base
         deletedRequest
       end
     end
+  end
+
+  def self.render_json(request)
+    request.to_json( :include => :requested_user )
   end
 
 end

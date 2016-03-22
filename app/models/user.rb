@@ -14,4 +14,20 @@ class User < ActiveRecord::Base
     '#{first_name} #{last_name}'
   end
 
+  def self.render_to_json(user)
+    user.to_json
+  end
+
+  def self.render_to_json_full(user)
+    user.to_json(
+      :include => [
+        {:friendships       => {:include => :friend_user    }},
+        {:follows           => {:include => :followed_user  }},
+        {:followeds         => {:include => :user           }},
+        {:follow_requests   => {:include => :requested_user }},
+        {:followed_requests => {:include => :user           }},
+      ]
+    )
+  end
+
 end

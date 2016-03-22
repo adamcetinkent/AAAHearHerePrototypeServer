@@ -1,33 +1,37 @@
 class UsersController < ApplicationController
 
   def index
-    @users = User.all
+    users = User.all
     #render json: @users
   end
 
   def show
-    @user = User.find(params[:id])
-    render json: @user.to_json(
-		:include => [
-			{ :friendships => {:include => :friend_user }},
-			{ :follows => {:include => :followed_user }}, 
-			{ :followeds => {:include => :user }}, 
-			{ :follow_requests => {:include => :requested_user }}, 
-			{ :followed_requests => {:include => :user }} 
-		])
+    user = User.find(params[:id])
+    render json: User.render_json_full(user)
   end
 
-  def validate
-    @token = params[:id]
-    render json: @token
+  def search_users
+    splitQuery = params[:query].split.map {|val| "%#{val}%"}
+    foundUsersAll = User.where("concat(first_name, ' ', last_name) ILIKE ALL ( array [?] )", splitQuery)
+    forUser = User.find(params[:id])
+    privacy1IDs = forUser.friendships.pluck(:friend_user_id)
+    privacy2IDs = forUser.followeds.pluck(:user_id) | forUser.follows.pluck(:followed_user_id)
+    foundUsersFiltered = foundUsersAll.where("privacy = 0 OR id = ? OR (privacy = 1 AND id in (?)) OR (privacy = 2 AND id in (?))",
+                                             params[:id],
+                                             privacy1IDs,
+                                             privacy2IDs)
+    render json: User.render_to_json(foundUsersFiltered)
   end
+
+  #def validate
+  #  @token = params[:id]
+  #  render json: @token
+  #end
 
   def create
-    @user = User.new(user_params)
-    if @user.save
-      respond_to do |format|
-        format.json{render json: @user}
-      end
+    user = User.new(user_params)
+    if user.save
+      User.render_to_json(user)
     end
   end
 

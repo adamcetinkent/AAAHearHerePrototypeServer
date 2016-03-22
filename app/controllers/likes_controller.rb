@@ -1,24 +1,9 @@
 class LikesController < ApplicationController
 
-  #def index
-  #  @likes = Like.all
-  #  render json: @likes.to_json(:include => [:user, :post])
-  #end
-
   def create
-    @like = Like.new(like_params)
-    @deletedLikes = Like.with_deleted.where(post_id: @like.post_id, user_id: @like.user_id)
-    if (@deletedLikes.blank?)
-      puts 'NEW LIKE'
-      if @like.save
-        render json: @like.to_json( :include => :user )
-      end
-    else 
-      puts 'RESTORE LIKE'
-      deletedLike = @deletedLikes.take
-      deletedLike.restore
-      render json: deletedLike.to_json( :include => :user )
-    end
+    like = Like.new(like_params)
+    createdLike = Like.create_or_restore(like)
+    render json: Like.render_json_user(like)
   end
 
   def delete

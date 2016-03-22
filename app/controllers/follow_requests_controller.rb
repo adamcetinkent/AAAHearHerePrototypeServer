@@ -12,27 +12,27 @@ class FollowRequestsController < ApplicationController
       follow = Follow.new
       follow.user_id = request.user_id
       follow.followed_user_id = request.requested_user_id
-      createdFollow = Follow.createOrRestore(follow)
-      render json: createdFollow.to_json( :include => :followed_user )
+      createdFollow = Follow.create_or_restore(follow)
+      render json: Follow.render_json_followed(createdFollow)
     elsif auto == 1
       puts "AUTO ACCEPT FRIENDS"
       @friends = Friendship.where(user_id: request.requested_user_id, friend_user_id: request.user_id)
       if (@friends.blank?)
         puts 'NOT FRIENDS!'
-        followRequest = FollowRequest.createOrRestore(request)
-        render json: followRequest.to_json( :include => :requested_user )
+        followRequest = FollowRequest.create_or_restore(request)
+        render json: FollowRequest.render_json(followRequest)
       else
         puts 'FRIENDS!'
         follow = Follow.new
         follow.user_id = request.user_id
         follow.followed_user_id = request.requested_user_id
-        createdFollow = Follow.createOrRestore(follow)
-        render json: createdFollow.to_json( :include => :followed_user )
+        createdFollow = Follow.create_or_restore(follow)
+        render json: Follow.render_json_followed(createdFollow)
       end
     else
       puts "AUTO ACCEPT NONE"
-      followRequest = FollowRequest.createOrRestore(request)
-      render json: followRequest.to_json( :include => :requested_user )
+      followRequest = FollowRequest.create_or_restore(request)
+      render json: FollowRequest.render_json(followRequest)
     end
   end
 
@@ -42,25 +42,24 @@ class FollowRequestsController < ApplicationController
     if request.blank?
       render :nothing => true, :status => 400
     else
-      @follow = Follow.new
-      @follow.user_id = request.user_id
-      @follow.followed_user_id = request.requested_user_id
-      puts @follow.to_json
-      @deletedFollows = Follow.with_deleted.where(user_id: @follow.user_id, followed_user_id: @follow.followed_user_id)
-      if (@deletedFollow.blank?)
+      follow = Follow.new
+      follow.user_id = request.user_id
+      follow.followed_user_id = request.requested_user_id
+      deletedFollows = Follow.with_deleted.where(user_id: follow.user_id, followed_user_id: follow.followed_user_id)
+      if (deletedFollow.blank?)
         puts 'NEW FOLLOW'
-        if @follow.save
+        if follow.save
           request.destroy
-          render json: @follow.to_json( :include => :user )
+          render json: Follow.render_json_user(follow)
         else
           render :nothing => true, :status => 400
         end
       else
         puts 'RESTORE FOLLOW'
-        deletedFollow = @deletedFollows.take
+        deletedFollow = deletedFollows.take
         if deletedFollow.restore
           request.destroy
-          render json: deletedFollow.to_json( :include => :user )
+          render json: Follow.render_json_user(deletedFollow)
         else
           render :nothing => true, :status => 400
         end
