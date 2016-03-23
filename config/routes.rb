@@ -15,6 +15,7 @@ Rails.application.routes.draw do
   get     'posts/by/:user_id'   => 'posts#by_user'
   get     'posts/for/:user_id'  => 'posts#for_user'
   post	  'posts' 		          => 'posts#create'
+  get     'posts/count/by/:user_id/' => 'posts#by_user_count' 
 
   get     'posts/for/:user_id/at/:lat/:lng', 
                             :to => 'posts#for_user_at_location', :constraints => {:lat => /\-?\d+(.\d+)?/, :lng => /\-?\d+(.\d+)?/}

@@ -15,6 +15,12 @@ class PostsController < ApplicationController
     render json: Post.render_json_full(posts)
   end
 
+  def by_user_count
+    post_count = Post.where(user_id: params[:user_id]).count
+    #render json: "{value: '" + post_count.to_s + "'}"
+    render json: post_count.to_s
+  end
+
   def for_user
     follows = User.find(params[:user_id]).follows
     posts = Post.where(user_id: follows.pluck(:followed_user_id).push(params[:user_id]))

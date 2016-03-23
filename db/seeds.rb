@@ -6,16 +6,38 @@
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
-adam1   = User.create!(first_name: 'Adam',      last_name: 'Kent',          email: 'adamcetinkent@gmail.com',               fb_user_id: "10205891943610300",  auto_accept: '0', privacy: '1')
-test2   = User.create!(first_name: 'Anastasia', last_name: 'Perkins',       email: 'anastasia_mitdwtk_perkins@tfbnw.net',   fb_user_id: "139926446395804",    auto_accept: '0', privacy: '1')
-test3   = User.create!(first_name: 'Donna',     last_name: 'McDonaldman',   email: 'donna_thgunov_mcdonaldman@tfbnw.net',   fb_user_id: "144621749258860",    auto_accept: '1', privacy: '1')
-test4   = User.create!(first_name: 'Mark',      last_name: 'Coffee',        email: 'mark_zifuzym_cofee@tfbnw.net',          fb_user_id: "151343778589171",    auto_accept: '0', privacy: '1')
-test5   = User.create!(first_name: 'James',     last_name: 'East',          email: 'james_pgwxujb_east@tfbnw.net',          fb_user_id: "123611448031910",    auto_accept: '2', privacy: '0')
-test6   = User.create!(first_name: 'Martin',    last_name: 'Martinazziman', email: 'mike_ipmbuot_martinazziman@tfbnw.net',  fb_user_id: "143713852683546",    auto_accept: '0', privacy: '1')
-test7   = User.create!(first_name: 'Paul F.',   last_name: 'Tompkins',      email: 'paul_anroyol_tompkins@tfbnw.net',       fb_user_id: "111524165911594",    auto_accept: '2', privacy: '0')
-test8   = User.create!(first_name: 'Scott',     last_name: 'Aukerman',      email: 'scott_asaqqkg_aukerman@tfbnw.net',      fb_user_id: "117728641956952",    auto_accept: '2', privacy: '0')
-test9   = User.create!(first_name: 'Lauren',    last_name: 'Lapkus',        email: 'lauren_rxwvltj_lapkus@tfbnw.net',       fb_user_id: "119771251752135",    auto_accept: '2', privacy: '0')
-test10  = User.create!(first_name: 'Jessica',   last_name: 'St. Clair',     email: 'jessica_wasxjez_clair@tfbnw.net',       fb_user_id: "123979194664092",    auto_accept: '2', privacy: '0')
+adam1   = User.create!(first_name: 'Adam',      last_name: 'Kent',          email: 'adamcetinkent@gmail.com',
+                       bio: "Adam is the creator of Hear! Here! and is unsure about who exactly is ever going to read this except for him.",
+                       fb_user_id: "10205891943610300",  auto_accept: '0', privacy: '1')
+test2   = User.create!(first_name: 'Anastasia', last_name: 'Perkins',       email: 'anastasia_mitdwtk_perkins@tfbnw.net',
+                       bio: "Totally a real person. Always doing things and being real.",
+                       fb_user_id: "139926446395804",    auto_accept: '0', privacy: '1')
+test3   = User.create!(first_name: 'Donna',     last_name: 'McDonaldman',   email: 'donna_thgunov_mcdonaldman@tfbnw.net',
+                       bio: "The Big Mac",
+                       fb_user_id: "144621749258860",    auto_accept: '1', privacy: '1')
+test4   = User.create!(first_name: 'Mark',      last_name: 'Coffee',        email: 'mark_zifuzym_cofee@tfbnw.net',
+                       bio: "A lover, not a fighter!",
+                       fb_user_id: "151343778589171",    auto_accept: '0', privacy: '1')
+test5   = User.create!(first_name: 'James',     last_name: 'East',          email: 'james_pgwxujb_east@tfbnw.net',
+                       bio: "Music is life. Life is music.",
+                       fb_user_id: "123611448031910",    auto_accept: '2', privacy: '0')
+test6   = User.create!(first_name: 'Martin',    last_name: 'Martinazziman', email: 'mike_ipmbuot_martinazziman@tfbnw.net',
+                       bio: "Single by choice.",
+                       fb_user_id: "143713852683546",    auto_accept: '0', privacy: '1')
+test7   = User.create!(first_name: 'Paul F.',   last_name: 'Tompkins',      email: 'paul_anroyol_tompkins@tfbnw.net',
+                       bio: "I host \"No, YOU Shut Up!\" Click the link to watch full episodes online! bit.ly/NYSU4",
+                       fb_user_id: "111524165911594",    auto_accept: '2', privacy: '0')
+test8   = User.create!(first_name: 'Scott',     last_name: 'Aukerman',      email: 'scott_asaqqkg_aukerman@tfbnw.net',
+                       bio: "Scott Aukerman™",
+                       fb_user_id: "117728641956952",    auto_accept: '2', privacy: '0')
+test9   = User.create!(first_name: 'Lauren',    last_name: 'Lapkus',        email: 'lauren_rxwvltj_lapkus@tfbnw.net',
+                       bio: "does drugs for breakfast
+                       splitsider.com/2016/02/scott-aukerman-announces-a-comedy-bang-bang-tour-with-lauren-lapkus-paul-f-tompkins-and-neil-campbell/",
+                       fb_user_id: "119771251752135",    auto_accept: '2', privacy: '0')
+test10  = User.create!(first_name: 'Jessica',   last_name: 'St. Clair',     email: 'jessica_wasxjez_clair@tfbnw.net',
+                       bio: "Playing House season 2 with @lennonparham coming August 4th, 10pm on USA!
+                       usanet.tv/PlayingHouseWatch",
+                       fb_user_id: "123979194664092",    auto_accept: '2', privacy: '0')
 
 friendship01_02 = Friendship.create!(user_id: '1',  friend_user_id: '2')
 friendship01_03 = Friendship.create!(user_id: '1',  friend_user_id: '3')
@@ -51,35 +73,35 @@ friendship10_07 = Friendship.create!(user_id: '10', friend_user_id: '7')
 friendship10_08 = Friendship.create!(user_id: '10', friend_user_id: '8')
 friendship10_09 = Friendship.create!(user_id: '10', friend_user_id: '9')
 
-post01 = Post.create!(user_id: '1',   track: '2Iccm3cKBQHWt5yk0yX9nh', lat:'51.5282212',  lon: '-0.1281044', 
-                      message: 'First post! omg!', 
+post01 = Post.create!(user_id: '1',   track: '2Iccm3cKBQHWt5yk0yX9nh', lat:'51.5282212',  lon: '-0.1281044',
+                      message: 'First post! omg!',
                       place_name: "Pret a Manger, King's Cross, London")
-post02 = Post.create!(user_id: '2',   track: '5UJ8StM1nvIJJRhK5gEAJc', lat:'51.5326212',  lon: '-0.1272544', 
-                      message: 'LOVE THIS TUNE!', 
+post02 = Post.create!(user_id: '2',   track: '5UJ8StM1nvIJJRhK5gEAJc', lat:'51.5326212',  lon: '-0.1272544',
+                      message: 'LOVE THIS TUNE!',
                       place_name: "Starbucks, King's Cross")
-post03 = Post.create!(user_id: '3',   track: '6u9RO91ANrFqD8dmUNiMoc', lat:'51.5296212',  lon: '-0.1351044', 
-                      message: 'My first kiss was to this song! {tag_01}', 
+post03 = Post.create!(user_id: '3',   track: '6u9RO91ANrFqD8dmUNiMoc', lat:'51.5296212',  lon: '-0.1351044',
+                      message: 'My first kiss was to this song! {tag_01}',
                       place_name: 'Euston Station, London')
-post04 = Post.create!(user_id: '4',   track: '3JbqwFY5q0ORO3siv5zL3A', lat:'51.5334212',  lon: '-0.1278044', 
-                      message: '{tag_01} Send help!', 
+post04 = Post.create!(user_id: '4',   track: '3JbqwFY5q0ORO3siv5zL3A', lat:'51.5334212',  lon: '-0.1278044',
+                      message: '{tag_01} Send help!',
                       place_name: "Under a train!")
-post05 = Post.create!(user_id: '5',   track: '3kguMbJma0qhOLniGsFlKq', lat:'51.5302212',  lon: '-0.1309544', 
-                      message: 'First they came for the musicians...', 
+post05 = Post.create!(user_id: '5',   track: '3kguMbJma0qhOLniGsFlKq', lat:'51.5302212',  lon: '-0.1309544',
+                      message: 'First they came for the musicians...',
                       place_name: 'Chalton Street, London')
-post06 = Post.create!(user_id: '6',   track: '7B04VRtTs6ucHp8qJ6Nz8M', lat:'51.5311820',  lon: '-0.1310650', 
-                      message: 'Do you hear the phone when I call?', 
+post06 = Post.create!(user_id: '6',   track: '7B04VRtTs6ucHp8qJ6Nz8M', lat:'51.5311820',  lon: '-0.1310650',
+                      message: 'Do you hear the phone when I call?',
                       place_name: "The Cock Tavern, Phoenix Road, London, United Kingdom")
-post07 = Post.create!(user_id: '7',   track: '1jUPOeAOtsjjV1jUWc2H1g', lat:'34.09800110', lon: '-118.327731', 
-                      message: 'The only good songs are hymns!', 
+post07 = Post.create!(user_id: '7',   track: '1jUPOeAOtsjjV1jUWc2H1g', lat:'34.09800110', lon: '-118.327731',
+                      message: 'The only good songs are hymns!',
                       place_name: "The ArcLight, Hollywood")
-post08 = Post.create!(user_id: '8',   track: '4DbUk1qwcz9KKcUY4t8f8u', lat:'34.0980050',  lon: '-118.333672', 
-                      message: 'That\'s a good song!', 
+post08 = Post.create!(user_id: '8',   track: '4DbUk1qwcz9KKcUY4t8f8u', lat:'34.0980050',  lon: '-118.333672',
+                      message: 'That\'s a good song!',
                       place_name: "Earwolf Studios")
-post09 = Post.create!(user_id: '9',   track: '6ofOBTBzzjjvOOm3iMmLiE', lat:'90.0',        lon: '0.0', 
-                      message: 'Ho HO!', 
+post09 = Post.create!(user_id: '9',   track: '6ofOBTBzzjjvOOm3iMmLiE', lat:'90.0',        lon: '0.0',
+                      message: 'Ho HO!',
                       place_name: "The North Pole")
-post10 = Post.create!(user_id: '10',  track: '1ZtzjvhIcLoogzOpt4rKoa', lat:'33.98793000', lon: '-118.421295', 
-                      message: 'WOMP UP THE JAMZ!', 
+post10 = Post.create!(user_id: '10',  track: '1ZtzjvhIcLoogzOpt4rKoa', lat:'33.98793000', lon: '-118.421295',
+                      message: 'WOMP UP THE JAMZ!',
                       place_name: "Marina del Rey High School")
 
 comment1 = Comment.create!(post_id: '1', user_id: '2', message: 'zomg first comment!')

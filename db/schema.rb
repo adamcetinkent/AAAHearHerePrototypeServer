@@ -112,6 +112,7 @@ ActiveRecord::Schema.define(version: 20160316162005) do
     t.string   "first_name"
     t.string   "last_name"
     t.string   "email"
+    t.string   "bio"
     t.string   "fb_user_id"
     t.integer  "auto_accept"
     t.integer  "privacy"
