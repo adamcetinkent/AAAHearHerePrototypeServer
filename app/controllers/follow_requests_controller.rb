@@ -46,7 +46,7 @@ class FollowRequestsController < ApplicationController
       follow.user_id = request.user_id
       follow.followed_user_id = request.requested_user_id
       deletedFollows = Follow.with_deleted.where(user_id: follow.user_id, followed_user_id: follow.followed_user_id)
-      if (deletedFollow.blank?)
+      if (deletedFollows.blank?)
         puts 'NEW FOLLOW'
         if follow.save
           request.destroy

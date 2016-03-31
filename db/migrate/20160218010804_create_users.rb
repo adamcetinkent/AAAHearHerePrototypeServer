@@ -5,9 +5,11 @@ class CreateUsers < ActiveRecord::Migration
       t.string  :last_name
       t.string  :email
       t.string  :bio
+      t.string  :url
       t.string  :fb_user_id
       t.integer :auto_accept
-      t.integer :privacy
+      t.integer :profile_privacy
+      t.integer :search_privacy
 
       t.timestamps
     end

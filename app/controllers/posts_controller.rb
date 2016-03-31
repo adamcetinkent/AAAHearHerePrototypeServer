@@ -10,8 +10,72 @@ class PostsController < ApplicationController
     render json: Post.render_json_full(post)
   end
 
+  def user_privacy
+    privacy = User.is_allowed_to_see(params[:by_user_id], params[:for_user_id])
+    render json: (privacy == 01 || privacy == 11 || privacy = 21 || privacy = 31).to_s
+  end
+
   def by_user
-    posts = Post.where(user_id: params[:user_id])
+    privacy = User.is_allowed_to_see(params[:by_user_id], params[:for_user_id])
+    if privacy == 31
+      # all posts:   0,1,2,3
+      posts = Post.where("user_id = ?", params[:by_user_id])
+    else
+      tags = Post.where("user_id =?", params[:by_user_id]).collect(&:tags).flatten.uniq
+      userTags = []
+      tags.each do |tag|
+        userTags << tag.post_id if tag.user_id == params[:for_user_id].to_i
+      end
+      puts userTags
+      case privacy
+      when 01 then
+        # public posts:   0
+        # tagged posts:   0,1,2,3
+        posts = Post.where("user_id = ? AND 
+                              (privacy = 0
+                              OR id IN (?))",
+                           params[:by_user_id].to_i,                          
+                           userTags)
+      when 10 then
+        # public posts:   0
+        # tagged posts:   0,1,2,3
+        posts = Post.where("user_id = ? AND 
+                              (privacy = 0
+                              OR id IN (?))",
+                           params[:by_user_id].to_i,                          
+                           userTags)
+      when 11 then
+        # public posts:   0
+        # friends posts:  1
+        # tagged posts:   0,1,2,3
+        posts = Post.where("user_id = ? AND 
+                              (privacy = 0
+                              OR privacy = 1
+                              OR id IN (?))",
+                           params[:by_user_id].to_i,                          
+                           userTags)
+      when 20 then
+        # public posts:   0
+        # tagged posts:   0,1,2,3
+        posts = Post.where("user_id = ? AND 
+                              (privacy = 0
+                              OR id IN (?))",
+                           params[:by_user_id].to_i,                          
+                           userTags)
+      when 21 then
+        # public posts:   0
+        # friends posts:  1
+        # follower posts: 2
+        # tagged posts:   0,1,2,3
+        posts = Post.where("user_id = ? AND 
+                              (privacy = 0
+                              OR privacy = 1
+                              OR privacy = 2
+                              OR id IN (?))",
+                           params[:by_user_id].to_i,                          
+                           userTags)
+      end                
+    end
     render json: Post.render_json_full(posts)
   end
 
@@ -23,7 +87,12 @@ class PostsController < ApplicationController
 
   def for_user
     follows = User.find(params[:user_id]).follows
-    posts = Post.where(user_id: follows.pluck(:followed_user_id).push(params[:user_id]))
+    tags = Tag.where(user_id: params[:user_id]).collect(&:post_id).flatten.uniq
+    posts = Post.where("user_id IN (?)
+                        OR id IN (?)",
+                        follows.pluck(:followed_user_id).push(params[:user_id]),
+                        tags)
+
     render json: Post.render_json_full(posts)
   end
 

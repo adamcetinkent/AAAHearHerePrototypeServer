@@ -12,7 +12,8 @@ Rails.application.routes.draw do
   #get	  'posts/:id' 		      => 'posts#show', as: :post
   get	    'posts' 		          => 'posts#index'
   get	    'posts/:id' 		      => 'posts#show'
-  get     'posts/by/:user_id'   => 'posts#by_user'
+  get     'posts/privacy/by/:by_user_id/for/:for_user_id'   => 'posts#user_privacy'
+  get     'posts/by/:by_user_id/for/:for_user_id'   => 'posts#by_user'
   get     'posts/for/:user_id'  => 'posts#for_user'
   post	  'posts' 		          => 'posts#create'
   get     'posts/count/by/:user_id/' => 'posts#by_user_count' 
@@ -25,6 +26,8 @@ Rails.application.routes.draw do
   post 	  'likes' 		          => 'likes#create'
   delete  'likes/:id' 		      => 'likes#delete'
 
+  get     'follows/count/in/:user_id/' => 'follows#follows_count_in'
+  get     'follows/count/out/:user_id/' => 'follows#follows_count_out'
   post	  'follows/request/'	  => 'follow_requests#create'
   post	  'follows/accept/:id'	=> 'follow_requests#accept'
   delete  'follows/refuse/:id'	=> 'follow_requests#delete'

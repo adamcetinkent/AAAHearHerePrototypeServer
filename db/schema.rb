@@ -82,6 +82,7 @@ ActiveRecord::Schema.define(version: 20160316162005) do
     t.string   "message"
     t.string   "place_name"
     t.string   "google_place_id"
+    t.integer  "privacy"
     t.datetime "created_at",      null: false
     t.datetime "updated_at",      null: false
     t.datetime "deleted_at"
@@ -113,9 +114,11 @@ ActiveRecord::Schema.define(version: 20160316162005) do
     t.string   "last_name"
     t.string   "email"
     t.string   "bio"
+    t.string   "url"
     t.string   "fb_user_id"
     t.integer  "auto_accept"
-    t.integer  "privacy"
+    t.integer  "profile_privacy"
+    t.integer  "search_privacy"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "deleted_at"

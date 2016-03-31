@@ -30,4 +30,38 @@ class User < ActiveRecord::Base
     )
   end
 
+  def self.is_allowed_to_see(by_user_id, for_user_id)
+    if by_user_id == for_user_id
+      puts "FOR SELF!"
+      31
+    else
+      byUser = User.find(by_user_id)
+      case byUser.profile_privacy
+      when 0 then
+        puts "NO PRIVACY"
+        01
+      when 1 then
+        if User.find(for_user_id).friendships
+            .where(friend_user_id: by_user_id).blank? &&
+           User.find(for_user_id).follows
+            .where(followed_user_id: by_user_id).blank?
+          puts "FRIENDS PRIVACY: DENIED"
+          10
+        else
+          puts "FRIENDS PRIVACY: ALLOWED"
+          11
+        end
+      when 2 then
+        if User.find(for_user_id).follows
+               .where(followed_user_id: by_user_id).blank?
+          puts "FOLLOWERS PRIVACY: DENIED"
+          20
+        else
+          puts "FOLLOWERS PRIVACY: ALLOWED"
+          21
+        end
+      end
+    end
+  end
+
 end
