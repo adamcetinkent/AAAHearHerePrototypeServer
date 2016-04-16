@@ -12,14 +12,27 @@ class PostsController < ApplicationController
 
   def user_privacy
     privacy = User.is_allowed_to_see(params[:by_user_id], params[:for_user_id])
-    render json: (privacy == 01 || privacy == 11 || privacy = 21 || privacy = 31).to_s
+    puts "Privacy: " + privacy.to_s
+    privacyBool = (privacy == 01 || privacy == 11 || privacy == 21 || privacy == 31)
+    puts "PrivacyBool: " + privacyBool.to_s
+    render json: privacyBool.to_s
   end
 
   def by_user
+    if params[:date] then
+      date = params[:date].to_datetime
+    else
+      date = DateTime.now
+    end
     privacy = User.is_allowed_to_see(params[:by_user_id], params[:for_user_id])
     if privacy == 31
       # all posts:   0,1,2,3
-      posts = Post.where("user_id = ?", params[:by_user_id])
+      posts = Post.order(created_at: :desc)
+                  .where("created_at < ? 
+                         AND user_id = ?", 
+                         date,
+                         params[:by_user_id])
+                  .limit(5)
     else
       tags = Post.where("user_id =?", params[:by_user_id]).collect(&:tags).flatten.uniq
       userTags = []
@@ -31,49 +44,69 @@ class PostsController < ApplicationController
       when 01 then
         # public posts:   0
         # tagged posts:   0,1,2,3
-        posts = Post.where("user_id = ? AND 
+        posts = Post.order(created_at: :desc)
+                    .where("created_at < ? AND
+                            user_id = ? AND 
                               (privacy = 0
                               OR id IN (?))",
+                           date,
                            params[:by_user_id].to_i,                          
                            userTags)
+                    .limit(5)
       when 10 then
         # public posts:   0
         # tagged posts:   0,1,2,3
-        posts = Post.where("user_id = ? AND 
+        posts = Post.order(created_at: :desc)
+                    .where("created_at < ? AND
+                            user_id = ? AND 
                               (privacy = 0
                               OR id IN (?))",
+                           date,
                            params[:by_user_id].to_i,                          
                            userTags)
+                    .limit(5)
       when 11 then
         # public posts:   0
         # friends posts:  1
         # tagged posts:   0,1,2,3
-        posts = Post.where("user_id = ? AND 
+        posts = Post.order(created_at: :desc)
+                    .where("created_at < ? AND
+                            user_id = ? AND 
                               (privacy = 0
                               OR privacy = 1
                               OR id IN (?))",
+                           date,
                            params[:by_user_id].to_i,                          
                            userTags)
+                    .limit(5)
       when 20 then
         # public posts:   0
         # tagged posts:   0,1,2,3
-        posts = Post.where("user_id = ? AND 
+        posts = Post.order(created_at: :desc)
+                    .where("created_at < ? AND
+                            user_id = ? AND 
                               (privacy = 0
                               OR id IN (?))",
+                           date,
                            params[:by_user_id].to_i,                          
                            userTags)
+                    .limit(5)
       when 21 then
         # public posts:   0
         # friends posts:  1
         # follower posts: 2
         # tagged posts:   0,1,2,3
-        posts = Post.where("user_id = ? AND 
+        posts = Post.order(created_at: :desc)
+                    .where("created_at < ? AND
+                            user_id = ? AND 
                               (privacy = 0
                               OR privacy = 1
                               OR privacy = 2
                               OR id IN (?))",
+                           date,
                            params[:by_user_id].to_i,                          
                            userTags)
+                    .limit(5)
       end                
     end
     render json: Post.render_json_full(posts)
@@ -90,6 +123,42 @@ class PostsController < ApplicationController
     tags = Tag.where(user_id: params[:user_id]).collect(&:post_id).flatten.uniq
     posts = Post.where("user_id IN (?)
                         OR id IN (?)",
+                        follows.pluck(:followed_user_id).push(params[:user_id]),
+                        tags)
+
+    render json: Post.render_json_full(posts)
+  end
+
+  def for_user_before
+    if params[:date] then
+      date = params[:date].to_datetime
+    else
+      date = DateTime.now
+    end
+    follows = User.find(params[:user_id]).follows
+    tags = Tag.where(user_id: params[:user_id]).collect(&:post_id).flatten.uniq
+    posts = Post.order(created_at: :desc)
+                .where("created_at < ? AND (
+                          user_id IN (?)
+                          OR id IN (?)
+                        )",
+                        date,
+                        follows.pluck(:followed_user_id).push(params[:user_id]),
+                        tags)
+                .limit(5)
+
+    render json: Post.render_json_full(posts)
+  end
+
+  def for_user_since
+    date = params[:date].to_datetime
+    follows = User.find(params[:user_id]).follows
+    tags = Tag.where(user_id: params[:user_id]).collect(&:post_id).flatten.uniq
+    posts = Post.where("created_at >= ? AND (
+                          user_id IN (?)
+                          OR id IN (?)
+                        )",
+                        date,
                         follows.pluck(:followed_user_id).push(params[:user_id]),
                         tags)
 
