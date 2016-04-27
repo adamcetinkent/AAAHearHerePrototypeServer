@@ -47,3 +47,5 @@ group :development do
 end
 
 gem "paranoia", :github => "radar/paranoia", :branch => "rails4"
+
+#gem 'thin'

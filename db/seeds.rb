@@ -9,7 +9,8 @@
 adam1   = User.create!(first_name: 'Adam',      last_name: 'Kent',          email: 'adamcetinkent@gmail.com',
                        bio: "Adam is the creator of Hear! Here! and is unsure about who exactly is ever going to read this except for him.",
                        url: "",
-                       fb_user_id: "10205891943610300",  auto_accept: '0', profile_privacy: '1', search_privacy: '1')
+                       fb_user_id: "10205891943610300",  auto_accept: '0', profile_privacy: '1', search_privacy: '1',
+                       auth_token: "token1")
 test2   = User.create!(first_name: 'Anastasia', last_name: 'Perkins',       email: 'anastasia_mitdwtk_perkins@tfbnw.net',
                        bio: "Totally a real person. Always doing things and being real.",
                        url: "",

@@ -119,6 +119,7 @@ ActiveRecord::Schema.define(version: 20160316162005) do
     t.integer  "auto_accept"
     t.integer  "profile_privacy"
     t.integer  "search_privacy"
+    t.string   "auth_token"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "deleted_at"

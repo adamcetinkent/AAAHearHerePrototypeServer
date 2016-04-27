@@ -10,6 +10,7 @@ class CreateUsers < ActiveRecord::Migration
       t.integer :auto_accept
       t.integer :profile_privacy
       t.integer :search_privacy
+      t.string  :auth_token
 
       t.timestamps
     end

@@ -12,15 +12,15 @@ class TokensController < ApplicationController
     #puts url
 
     uri = URI(url)
-    response = Net::HTTP.get_response(uri)
+    fbResponse = Net::HTTP.get_response(uri)
 
     #puts response.code
 
-    case response
+    case fbResponse
     when Net::HTTPSuccess then
       #puts response.body
       
-      data = ActiveSupport::JSON.decode(response.body)
+      data = ActiveSupport::JSON.decode(fbResponse.body)
 
       if data['data']['is_valid']
         found_fb_user_id = data['data']['user_id']
@@ -47,6 +47,7 @@ class TokensController < ApplicationController
             puts "ERROR GETTING FRIENDS"
           end
 
+          response.headers["Authorization"] = user.auth_token
           render json: User.render_to_json_full(user)
         
         else

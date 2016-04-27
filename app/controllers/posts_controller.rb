@@ -1,4 +1,5 @@
 class PostsController < ApplicationController
+  before_action :authenticate
 
   def index
     posts = Post.all
@@ -135,13 +136,19 @@ class PostsController < ApplicationController
     else
       date = DateTime.now
     end
+    if (params[:excludeIDs].present?)
+      excludeIDs = params[:excludeIDs].split(",").map{|s| s.to_i}
+    else
+      excludeIDs = Array.new(1, 0)
+    end
     follows = User.find(params[:user_id]).follows
     tags = Tag.where(user_id: params[:user_id]).collect(&:post_id).flatten.uniq
     posts = Post.order(created_at: :desc)
-                .where("created_at < ? AND (
-                          user_id IN (?)
-                          OR id IN (?)
-                        )",
+                .where("id NOT IN (?)
+                        AND created_at < ? 
+                        AND (user_id IN (?)
+                          OR id IN (?))",
+                        excludeIDs,
                         date,
                         follows.pluck(:followed_user_id).push(params[:user_id]),
                         tags)
@@ -169,15 +176,72 @@ class PostsController < ApplicationController
     puts "LATITUDE =>"
     puts params[:lat]
     puts "LONGITUDE =>"
-    puts params[:lng]
+    puts params[:lon]
     range = 0.001
     lat_max = params[:lat].to_f + range
     lat_min = params[:lat].to_f - range
-    lon_max = params[:lng].to_f + range
-    lon_min = params[:lng].to_f - range
+    lon_max = params[:lon].to_f + range
+    lon_min = params[:lon].to_f - range
+    user_id = params[:user_id].to_i
     follows = User.find(params[:user_id]).follows
-    posts = Post.where(user_id: follows.pluck(:followed_user_id).push(params[:user_id]), lat: lat_min...lat_max, lon: lon_min...lon_max)
+    tags = Tag.where(user_id: params[:user_id]).collect(&:post_id).flatten.uniq
+    posts = postsWithinBounds(follows.pluck(:followed_user_id).push(user_id), 
+                              tags, 
+                              lat_min,
+                              lat_max,
+                              lon_min,
+                              lon_max,
+                              Array.new(1, 0))
     render json: Post.render_json_user(posts)
+  end
+
+  def for_user_within_bounds
+    latSW = params[:latSW].to_f
+    latNE = params[:latNE].to_f
+    lonSW = params[:lonSW].to_f
+    lonNE = params[:lonNE].to_f
+    user_id = params[:user_id].to_i
+    follows = User.find(params[:user_id]).follows
+    tags = Tag.where(user_id: params[:user_id]).collect(&:post_id).flatten.uniq
+    if (params[:excludeIDs].present?)
+      excludeIDs = params[:excludeIDs].split(",").map{|s| s.to_i}
+    else
+      excludeIDs = Array.new(1, 0)
+    end
+    posts = postsWithinBounds(follows.pluck(:followed_user_id).push(user_id), 
+                              tags, 
+                              latSW,
+                              latNE,
+                              lonSW,
+                              lonNE,
+                              excludeIDs)
+    render json: Post.render_json_user(posts)
+  end
+
+  def postsWithinBounds(userIDs, tagIDs, latSW, latNE, lonSW, lonNE, excludeIDs)
+    if (lonSW <= lonNE)
+      Post.where("id NOT IN (?)
+                  AND (user_id IN (?)
+                        OR id IN (?))
+                  AND lat BETWEEN ? AND ?
+                  AND lon BETWEEN ? AND ?",
+                  excludeIDs,
+                  userIDs,
+                  tagIDs,
+                  latSW, latNE,
+                  lonSW, lonNE)
+    else
+      Post.where("id NOT IN (?)
+                  AND (user_id IN (?)
+                        OR id IN (?))
+                  AND lat BETWEEN ? AND ?
+                  AND (lon > ? OR lon < ?)",
+                  excludeIDs,
+                  userIDS,
+                  tagIDs,
+                  latSW, latNE,
+                  lonSW, lonNE)
+    end
   end
 
   def new
@@ -190,6 +254,22 @@ class PostsController < ApplicationController
     if post.save
       render json: Post.render_json_full(post)
     end
+  end
+
+  protected
+  def authenticate
+    authenticate_token || render_unauthorised
+  end
+
+  def authenticate_token
+    authenticate_with_http_token do |token, options|
+      User.find_by(auth_token: token)
+    end
+  end
+
+  def render_unauthorised
+    self.headers['WWW-Authenticate'] = 'Token realm="Application"'
+    render json: 'Bad credentials', status: 401
   end
 
   private

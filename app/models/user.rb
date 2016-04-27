@@ -1,5 +1,6 @@
 class User < ActiveRecord::Base
   acts_as_paranoid
+  before_create :set_auth_token
 
   has_many :posts
   has_many :comments
@@ -62,6 +63,16 @@ class User < ActiveRecord::Base
         end
       end
     end
+  end
+
+  private
+  def set_auth_token
+    return if auth_token.present?
+    self.auth_token = generate_auth_token
+  end
+
+  def generate_auth_token
+    SecureRandom.uuid.gsub(/\-/,'')
   end
 
 end
