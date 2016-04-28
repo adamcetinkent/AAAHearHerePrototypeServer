@@ -47,8 +47,12 @@ class TokensController < ApplicationController
             puts "ERROR GETTING FRIENDS"
           end
 
-          response.headers["Authorization"] = user.auth_token
-          render json: User.render_to_json_full(user)
+          if (user.new_auth_token)
+            response.headers["Authorization"] = user.auth_token
+            render json: User.render_to_json_full(user)
+          else
+            render :nothing => true, :status => 401
+          end
         
         else
           puts "NEW USER DETECTED!"

@@ -65,6 +65,11 @@ class User < ActiveRecord::Base
     end
   end
 
+  def new_auth_token
+    self.auth_token = generate_auth_token
+    self.save
+  end
+
   private
   def set_auth_token
     return if auth_token.present?
