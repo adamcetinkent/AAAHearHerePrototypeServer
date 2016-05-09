@@ -166,17 +166,28 @@ class PostsController < ApplicationController
 
   def for_user_since
     for_user_id = @authenticated_user.id
-    date = params[:date].to_datetime
+    if params[:date] then
+      date = params[:date].to_datetime
+    else
+      date = DateTime.now
+    end
+    if (params[:excludeIDs].present?)
+      excludeIDs = params[:excludeIDs].split(",").map{|s| s.to_i}
+    else
+      excludeIDs = Array.new(1, 0)
+    end
     follows = User.find(for_user_id).follows
     tags = Tag.where(user_id: for_user_id).collect(&:post_id).flatten.uniq
-    posts = Post.where("created_at >= ? AND (
-                          user_id IN (?)
-                          OR id IN (?)
-                        )",
+    posts = Post.order(created_at: :desc)
+                .where("id NOT IN (?)
+                        AND created_at > ?
+                        AND (user_id IN (?)
+                          OR id IN (?))",
+                        excludeIDs,
                         date,
                         follows.pluck(:followed_user_id).push(for_user_id),
                         tags)
-
+                .limit(5)
     render json: Post.render_json_full(posts)
   end
 
@@ -216,7 +227,7 @@ class PostsController < ApplicationController
     else
       excludeIDs = Array.new(1, 0)
     end
-    posts = postsWithinBounds(follows.pluck(:followed_user_id).push(user_id),
+    posts = postsWithinBounds(follows.pluck(:followed_user_id).push(for_user_id),
                               tags,
                               latSW,
                               latNE,

@@ -1,13 +1,13 @@
-#require 'httparty'
-
 class TokensController < ApplicationController
-  #include HTTParty
+  before_action :get_token
 
   def validate
 
-    token = Token.new(token_params)
+    #token = Token.new(token_params)
     
-    url = "https://graph.facebook.com/debug_token?input_token="+token.token+"&access_token=966494340087272|tmC_hhzPVAOyVxYby-anwUrYwW8"
+    #puts "TOKEN: "+@token
+
+    url = "https://graph.facebook.com/debug_token?input_token="+@token+"&access_token=966494340087272|tmC_hhzPVAOyVxYby-anwUrYwW8"
 
     #puts url
 
@@ -24,16 +24,16 @@ class TokensController < ApplicationController
 
       if data['data']['is_valid']
         found_fb_user_id = data['data']['user_id']
-        puts "USER ID: " + found_fb_user_id
+        #puts "USER ID: " + found_fb_user_id
 
         user = User.find_by fb_user_id: found_fb_user_id
 
-        puts user.to_json
+        #puts user.to_json
 
         if user.present?
 
-          urlFriends = "https://graph.facebook.com/v2.5/me/friends?access_token="+token.token
-          puts "---GETTING FRIENDS---"
+          urlFriends = "https://graph.facebook.com/v2.5/me/friends?access_token="+@token
+          #puts "---GETTING FRIENDS---"
           #puts urlFriends
           uriFriends = URI(urlFriends)
           responseFriends = Net::HTTP.get_response(uriFriends)
@@ -41,7 +41,7 @@ class TokensController < ApplicationController
           case responseFriends
           when Net::HTTPSuccess then
             dataFriends = ActiveSupport::JSON.decode(responseFriends.body)
-            puts dataFriends
+            #puts dataFriends
             Friendship.process_friends(dataFriends, user)
           else
             puts "ERROR GETTING FRIENDS"
@@ -70,8 +70,14 @@ class TokensController < ApplicationController
   end
 
   private
-  def token_params
-    params.permit(:expires, :token, :applicationId, :userId)
+  #def token_params
+  #  params.permit(:expires, :token, :applicationId, :userId)
+  #end
+
+  def get_token
+    authenticate_with_http_token do |token, options|
+      @token = token
+    end
   end
 
 end

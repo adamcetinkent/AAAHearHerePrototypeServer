@@ -25,9 +25,10 @@ Rails.application.routes.draw do
                             :to => 'posts#for_user_before',
                             :constraints => {:date => /\d{4}-\d{2}-\d{2}%20\d{2}:\d{2}:\d{2}[.][0-9]+/,
                                              :excludeIDs => /(\d+,)+\d+|\d+/}
-  get     'posts/since/:date',
+  get     'posts/since/:date(/exclude/:exclude)',
                             :to => 'posts#for_user_since',
-                            :constraints => {:date => /\d{4}-\d{2}-\d{2}%20\d{2}:\d{2}:\d{2}[.][0-9]+/}
+                            :constraints => {:date => /\d{4}-\d{2}-\d{2}%20\d{2}:\d{2}:\d{2}[.][0-9]+/,
+                                             :excludeIDs => /(\d+,)+\d+|\d+/}
   get     'posts/at/:lat/:lon',
                             :to => 'posts#for_user_at_location',
                             :constraints => {:lat => /\-?\d+(.\d+)?/, :lon => /\-?\d+(.\d+)?/}
