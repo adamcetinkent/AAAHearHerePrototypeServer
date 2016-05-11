@@ -9,6 +9,13 @@ class Post < ActiveRecord::Base
 
   accepts_nested_attributes_for :tags
 
+  POST_PRIVACY = {
+    :public     => 0,
+    :friends    => 1,
+    :followers  => 2,
+    :tagged     => 3
+  }
+
   def self.render_json_user(post)
     post.to_json(:include => :user)
   end

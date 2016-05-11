@@ -8,7 +8,7 @@ class CreatePosts < ActiveRecord::Migration
       t.string  :message
       t.string  :place_name
       t.string  :google_place_id
-      t.integer :privacy
+      t.integer :privacy, :default => 0
 
       t.timestamps null: false
     end

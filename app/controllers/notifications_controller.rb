@@ -1,0 +1,43 @@
+class NotificationsController < ApplicationController
+  before_action :authenticate
+
+  def new(user_id, notification_type, notification_link)
+    puts "NOTIFICATION: " + notification_type.to_s + " " + notification_link.to_s
+  end
+
+  def for_user
+    for_user_id = @authenticated_user.id
+    notifications = Notification.where(user_id: for_user_id, read_at: nil)
+    render json: notifications.to_json
+  end
+
+  def read
+    for_user_id = @authenticated_user.id
+    notification_id = params[:id]
+    notification = Notification.find(notification_id)
+    if notification.user_id == for_user_id
+      notification.read_at = Time.now
+      notification.save
+      render json: notification.to_json
+    else
+      render json: :nothing, status: 401
+    end
+  end
+
+  protected
+  def authenticate
+    authenticate_token || render_unauthorised
+  end
+
+  def authenticate_token
+    authenticate_with_http_token do |token, options|
+      @authenticated_user = User.find_by(auth_token: token)
+    end
+  end
+
+  def render_unauthorised
+    self.headers['WWW-Authenticate'] = 'Token realm="Application"'
+    render json: 'Bad credentials', status: 401
+  end
+
+end

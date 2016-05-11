@@ -14,7 +14,7 @@ Rails.application.routes.draw do
   #posts
   post	  'posts' 		          => 'posts#create'
   #get	    'posts' 		          => 'posts#index' # TODO: DELETE FOR SECURITY!
-  get	    'posts/:id' 		      => 'posts#show'  # TODO: DELETE FOR SECURITY!
+  get	    'posts/:id' 		      => 'posts#show'
   get     'posts/privacy/by/:by_user_id/',
                             :to => 'posts#user_privacy'
   get     'posts/by/:by_user_id(/before/:date)(/exclude/:exclude)',
@@ -56,5 +56,10 @@ Rails.application.routes.draw do
   delete  'follows/:id'		      => 'follows#delete'
   get     'follows/count/in/:user_id/' => 'follows#follows_count_in'
   get     'follows/count/out/:user_id/' => 'follows#follows_count_out'
+
+  # notifications
+  get     'notifications/'      => 'notifications#for_user'
+  post    'notifications/read/:id',
+                            :to => 'notifications#read'
 
 end

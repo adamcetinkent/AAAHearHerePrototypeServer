@@ -11,6 +11,21 @@ class User < ActiveRecord::Base
   has_many :follow_requests
   has_many :followed_requests, :class_name => "FollowRequest", :foreign_key => "requested_user_id"
 
+  PRIVACY = {
+    :self_good      => 31,
+    :none_good      => 01,
+    :friends_bad    => 10,
+    :friends_good   => 11,
+    :followers_bad  => 20,
+    :followers_good => 21
+  }
+
+  PROFILE_PRIVACY = {
+    :public     => 0,
+    :friends    => 1,
+    :followers  => 2
+  }
+
   def full_name
     '#{first_name} #{last_name}'
   end
@@ -34,32 +49,28 @@ class User < ActiveRecord::Base
   def self.is_allowed_to_see(by_user_id, for_user_id)
     if by_user_id == for_user_id
       puts "FOR SELF!"
-      31
+      PRIVACY[:self_good]
     else
       byUser = User.find(by_user_id)
-      case byUser.profile_privacy
-      when 0 then
-        puts "NO PRIVACY"
-        01
-      when 1 then
-        if User.find(for_user_id).friendships
-            .where(friend_user_id: by_user_id).blank? &&
-           User.find(for_user_id).follows
-            .where(followed_user_id: by_user_id).blank?
-          puts "FRIENDS PRIVACY: DENIED"
-          10
+      if !User.find(for_user_id).follows
+              .where(followed_user_id: by_user_id).blank?
+        PRIVACY[:followers_good]
+      else
+        if byUser.profile_privacy == PROFILE_PRIVACY[:followers]
+          PRIVACY[:followers_bad]
         else
-          puts "FRIENDS PRIVACY: ALLOWED"
-          11
-        end
-      when 2 then
-        if User.find(for_user_id).follows
-               .where(followed_user_id: by_user_id).blank?
-          puts "FOLLOWERS PRIVACY: DENIED"
-          20
-        else
-          puts "FOLLOWERS PRIVACY: ALLOWED"
-          21
+          if !User.find(for_user_id).friendships
+                  .where(friend_user_id: by_user_id).blank?
+              PRIVACY[:friends_good]
+          else
+            if byUser.profile_privacy == PROFILE_PRIVACY[:friends]
+              PRIVACY[:friends_bad]
+            else
+              if byUser.profile_privacy == PROFILE_PRIVACY[:public]
+                PRIVACY[:none_good]
+              end
+            end
+          end
         end
       end
     end
