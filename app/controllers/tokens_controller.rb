@@ -47,6 +47,12 @@ class TokensController < ApplicationController
             puts "ERROR GETTING FRIENDS"
           end
 
+          notifications = Notification.where(for_user_id: user.id, read_at: nil)
+          notifications.each do |n|
+            n.sent_at = nil
+            n.save
+          end
+
           if (user.new_auth_token)
             response.headers["Authorization"] = user.auth_token
             render json: User.render_to_json_full(user)

@@ -10,6 +10,7 @@ class User < ActiveRecord::Base
   has_many :followeds, :class_name => "Follow", :foreign_key => "followed_user_id"
   has_many :follow_requests
   has_many :followed_requests, :class_name => "FollowRequest", :foreign_key => "requested_user_id"
+  has_many :notifications, :foreign_key => "for_user_id"
 
   PRIVACY = {
     :self_good      => 31,

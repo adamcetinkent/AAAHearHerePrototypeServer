@@ -1,13 +1,17 @@
 class NotificationsController < ApplicationController
   before_action :authenticate
 
-  def new(user_id, notification_type, notification_link)
-    puts "NOTIFICATION: " + notification_type.to_s + " " + notification_link.to_s
-  end
+  #def new(user_id, notification_type, notification_link)
+  #  puts "NOTIFICATION: " + notification_type.to_s + " " + notification_link.to_s
+  #end
 
   def for_user
     for_user_id = @authenticated_user.id
-    notifications = Notification.where(user_id: for_user_id, read_at: nil)
+    notifications = Notification.where(for_user_id: for_user_id, read_at: nil, sent_at: nil)
+    notifications.each do |n|
+      n.sent_at = Time.now
+      n.save
+    end
     render json: notifications.to_json
   end
 
@@ -15,7 +19,7 @@ class NotificationsController < ApplicationController
     for_user_id = @authenticated_user.id
     notification_id = params[:id]
     notification = Notification.find(notification_id)
-    if notification.user_id == for_user_id
+    if notification.for_user_id == for_user_id
       notification.read_at = Time.now
       notification.save
       render json: notification.to_json

@@ -52,6 +52,8 @@ Rails.application.routes.draw do
   # follows & follow requests
   post	  'follows/request/'	  => 'follow_requests#create'
   post	  'follows/accept/:id'	=> 'follow_requests#accept'
+  post    'follows/accept/notification/:id',
+                            :to => 'follow_requests#accept_from_notification'
   delete  'follows/refuse/:id'	=> 'follow_requests#delete'
   delete  'follows/:id'		      => 'follows#delete'
   get     'follows/count/in/:user_id/' => 'follows#follows_count_in'

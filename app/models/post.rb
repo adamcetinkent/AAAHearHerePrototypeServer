@@ -5,6 +5,7 @@ class Post < ActiveRecord::Base
   has_many :comments
   has_many :likes
   has_many :tags
+  has_many :notifications
 #  has_many :tagged_users, through: :tags, :class_name => "User"
 
   accepts_nested_attributes_for :tags

@@ -75,10 +75,13 @@ ActiveRecord::Schema.define(version: 20160510231153) do
   add_index "likes", ["deleted_at"], name: "index_likes_on_deleted_at", using: :btree
 
   create_table "notifications", force: :cascade do |t|
-    t.integer  "user_id"
+    t.integer  "for_user_id"
+    t.integer  "post_id"
+    t.string   "by_fb_user_id"
     t.integer  "notification_type"
-    t.integer  "notification_link"
     t.datetime "read_at"
+    t.datetime "sent_at"
+    t.string   "notification_text"
     t.datetime "created_at",        null: false
     t.datetime "updated_at",        null: false
     t.datetime "deleted_at"

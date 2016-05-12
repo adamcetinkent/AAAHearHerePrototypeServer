@@ -334,13 +334,15 @@ class PostsController < ApplicationController
           notify_user_ids |= [t.user.id]
         end
         notify_user_ids.each do |id|
+          by_user = User.find(@authenticated_user.id)
           notification = Notification.new(
-            user_id: id,
-            notification_type: Notification::NOTIFICATION_TYPE[:new_post],
-            notification_link: post.id)
-          if notification.save
-            puts "NOTIFICATION: "+notification.to_s
-          end
+            for_user_id:        id,
+            post_id:            post.id,
+            by_fb_user_id:      by_user.fb_user_id,
+            notification_type:  Notification::NOTIFICATION_TYPE[:new_post],
+            notification_text:  by_user.first_name + " " + by_user.last_name + " posted to Hear Here"
+          )
+          notification.save
         end
         render json: Post.render_json_full(post)
       end
