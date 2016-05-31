@@ -6,14 +6,35 @@ class CommentsController < ApplicationController
     comment = Comment.new(comment_params)
     if comment.save
       # INITIALLY, JUST POST OWNER
-      notification = Notification.new(
-        for_user_id:        comment.post.user.id,
-        post_id:            comment.post.id,
-        by_fb_user_id:      comment.user.fb_user_id,
-        notification_type:  Notification::NOTIFICATION_TYPE[:new_comment],
-        notification_text:  comment.user.first_name + " " + comment.user.last_name + " commented on your post"
-      )
-      notification.save
+      if comment.post.user.id != comment.user.id
+        notification = Notification.new(
+          for_user_id:        comment.post.user.id,
+          by_user_id:         comment.user.id,
+          post_id:            comment.post.id,
+          notification_type:  Notification::NOTIFICATION_TYPE[:new_comment],
+          notification_text:  comment.user.first_name + " " + comment.user.last_name + " commented on your post"
+        )
+        notification.save
+      end
+      # OTHERS WHO HAVE COMMENTED
+      other_commenter_ids = []
+      comment.post.comments.each do |c|
+        puts "COMMENT: " + c.id.to_s + " (user: "+c.user.id.to_s+")"
+        other_commenter_ids |= [c.user.id]
+      end
+      puts "other_ids: "+other_commenter_ids.to_s
+      other_commenter_ids.each do |id|
+        if id != comment.user.id
+          notification = Notification.new(
+            for_user_id:        id,
+            by_user_id:         comment.user.id,
+            post_id:            comment.post.id,
+            notification_type:  Notification::NOTIFICATION_TYPE[:new_comment],
+            notification_text:  comment.user.first_name + " " + comment.user.last_name + " also commented on a post"
+          )
+          notification.save
+        end
+      end
       render json: comment.to_json
     end
   end

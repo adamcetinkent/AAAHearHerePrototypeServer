@@ -48,6 +48,7 @@ class TokensController < ApplicationController
           end
 
           notifications = Notification.where(for_user_id: user.id, read_at: nil)
+                                      .where('notification_type != 5')
           notifications.each do |n|
             n.sent_at = nil
             n.save

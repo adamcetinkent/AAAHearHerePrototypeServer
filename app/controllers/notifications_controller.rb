@@ -12,7 +12,7 @@ class NotificationsController < ApplicationController
       n.sent_at = Time.now
       n.save
     end
-    render json: notifications.to_json
+    render json: Notification.render_json_full(notifications)
   end
 
   def read

@@ -15,6 +15,14 @@ class FollowRequestsController < ApplicationController
       follow.user_id = request.user_id
       follow.followed_user_id = request.requested_user_id
       createdFollow = Follow.create_or_restore(follow)
+      notification = Notification.new(
+        for_user_id:        request.requested_user.id,
+        by_user_id:         request.user.id,
+        post_id:            nil,
+        notification_type:  Notification::NOTIFICATION_TYPE[:new_follow],
+        notification_text:  request.user.first_name + " " + request.user.last_name + " started following you"
+      )
+      notification.save
       render json: Follow.render_json_followed(createdFollow)
     elsif auto == 1
       puts "AUTO ACCEPT FRIENDS"
@@ -22,6 +30,14 @@ class FollowRequestsController < ApplicationController
       if (@friends.blank?)
         puts 'NOT FRIENDS!'
         followRequest = FollowRequest.create_or_restore(request)
+        notification = Notification.new(
+          for_user_id:        followRequest.requested_user.id,
+          by_user_id:         followRequest.user.id,
+          post_id:            nil,
+          notification_type:  Notification::NOTIFICATION_TYPE[:new_follow_request],
+          notification_text:  followRequest.user.first_name + " " + followRequest.user.last_name + " sent you a follow request"
+        )
+        notification.save
         render json: FollowRequest.render_json(followRequest)
       else
         puts 'FRIENDS!'
@@ -29,6 +45,14 @@ class FollowRequestsController < ApplicationController
         follow.user_id = request.user_id
         follow.followed_user_id = request.requested_user_id
         createdFollow = Follow.create_or_restore(follow)
+        notification = Notification.new(
+          for_user_id:        request.requested_user.id,
+          by_user_id:         request.user.id,
+          post_id:            nil,
+          notification_type:  Notification::NOTIFICATION_TYPE[:new_follow],
+          notification_text:  request.user.first_name + " " + request.user.last_name + " started following you"
+        )
+        notification.save
         render json: Follow.render_json_followed(createdFollow)
       end
     else
@@ -36,8 +60,8 @@ class FollowRequestsController < ApplicationController
       followRequest = FollowRequest.create_or_restore(request)
       notification = Notification.new(
         for_user_id:        followRequest.requested_user.id,
+        by_user_id:         followRequest.user.id,
         post_id:            nil,
-        by_fb_user_id:      followRequest.user.fb_user_id,
         notification_type:  Notification::NOTIFICATION_TYPE[:new_follow_request],
         notification_text:  followRequest.user.first_name + " " + followRequest.user.last_name + " sent you a follow request"
       )
@@ -103,10 +127,12 @@ class FollowRequestsController < ApplicationController
             notification.destroy
             Notification.new(
               for_user_id:        notification.for_user_id,
+              by_user_id:         notification.by_user_id,
               post_id:            nil,
-              by_fb_user_id:      notification.by_fb_user_id,
               notification_type:  Notification::NOTIFICATION_TYPE[:new_follow],
-              notification_text:  notification.by_user.first_name + " " + notification.by_user.last_name + " began following you"
+              notification_text:  notification.by_user.first_name + " " + notification.by_user.last_name + " began following you",
+              sent_at:            Time.now,
+              read_at:            Time.now
             ).save
             render json: FollowRequest.render_json(follow_request)
           else
@@ -120,8 +146,8 @@ class FollowRequestsController < ApplicationController
             notification.destroy
             Notification.new(
               for_user_id:        notification.for_user_id,
+              by_user_id:         notification.by_user_id,
               post_id:            nil,
-              by_fb_user_id:      notification.by_fb_user_id,
               notification_type:  Notification::NOTIFICATION_TYPE[:new_follow],
               notification_text:  notification.by_user.first_name + " " + notification.by_user.last_name + " began following you"
             ).save

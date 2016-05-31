@@ -5,14 +5,16 @@ class LikesController < ApplicationController
   def create
     like = Like.new(like_params)
     createdLike = Like.create_or_restore(like)
-    notification = Notification.new(
-      for_user_id:        createdLike.post.user.id,
-      post_id:            createdLike.post.id,
-      by_fb_user_id:      createdLike.user.id,
-      notification_type:  Notification::NOTIFICATION_TYPE[:like_post],
-      notification_text:  createdLike.user.first_name + " " + createdLike.user.last_name + " liked your post"
-    )
-    notification.save
+    if createdLike.post.user.id != createdLike.user.id
+      notification = Notification.new(
+        for_user_id:        createdLike.post.user.id,
+        by_user_id:         createdLike.user.id,
+        post_id:            createdLike.post.id,
+        notification_type:  Notification::NOTIFICATION_TYPE[:like_post],
+        notification_text:  createdLike.user.first_name + " " + createdLike.user.last_name + " liked your post"
+      )
+      notification.save
+    end
     render json: Like.render_json_user(like)
   end
 

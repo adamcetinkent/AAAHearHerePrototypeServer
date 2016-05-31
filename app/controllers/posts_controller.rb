@@ -261,7 +261,30 @@ class PostsController < ApplicationController
                               lon_min,
                               lon_max,
                               Array.new(1, 0))
-    render json: Post.render_json_user(posts)
+    notifications = []
+    posts.each do |post|
+      recent_notification = Notification.where(
+        for_user_id:        for_user_id,
+        post_id:            post.id,
+        notification_type:  Notification::NOTIFICATION_TYPE[:post_location]
+      ).where(
+        'sent_at > ?',
+        1.day.ago
+      )
+      if recent_notification.blank?
+        notification = Notification.new(
+          for_user_id:        for_user_id,
+          by_user_id:         post.user_id,
+          post_id:            post.id,
+          notification_type:  Notification::NOTIFICATION_TYPE[:post_location],
+          sent_at:            Time.now
+        )
+        notification.save
+        notifications |= [notification]
+        puts "NEW NOTIFICATION: " + notification.id.to_s
+      end
+    end
+    render json: Notification.render_json_full(notifications)
   end
 
   def for_user_within_bounds
@@ -337,8 +360,8 @@ class PostsController < ApplicationController
           by_user = User.find(@authenticated_user.id)
           notification = Notification.new(
             for_user_id:        id,
+            by_user_id:         by_user.id,
             post_id:            post.id,
-            by_fb_user_id:      by_user.fb_user_id,
             notification_type:  Notification::NOTIFICATION_TYPE[:new_post],
             notification_text:  by_user.first_name + " " + by_user.last_name + " posted to Hear Here"
           )

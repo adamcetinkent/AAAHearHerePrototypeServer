@@ -76,8 +76,8 @@ ActiveRecord::Schema.define(version: 20160510231153) do
 
   create_table "notifications", force: :cascade do |t|
     t.integer  "for_user_id"
+    t.integer  "by_user_id"
     t.integer  "post_id"
-    t.string   "by_fb_user_id"
     t.integer  "notification_type"
     t.datetime "read_at"
     t.datetime "sent_at"
