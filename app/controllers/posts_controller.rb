@@ -390,7 +390,7 @@ class PostsController < ApplicationController
 
   private
   def post_params
-    params.require(:post).permit(:user_id, :track, :lat, :lon, :message, :place_name, :google_place_id, tags_attributes: [ :user_id ])
+    params.require(:post).permit(:user_id, :track, :lat, :lon, :message, :place_name, :google_place_id, :privacy, tags_attributes: [ :user_id ])
   end
 
 end
