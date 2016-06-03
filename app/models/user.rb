@@ -6,6 +6,7 @@ class User < ActiveRecord::Base
   has_many :comments
   has_many :likes
   has_many :friendships
+  has_many :friend_users, :through => :friendships
   has_many :follows
   has_many :followeds, :class_name => "Follow", :foreign_key => "followed_user_id"
   has_many :follow_requests

@@ -9,6 +9,8 @@ class CreatePosts < ActiveRecord::Migration
       t.string  :place_name
       t.string  :google_place_id
       t.integer :privacy, :default => 0
+      t.decimal :dummy_lat
+      t.decimal :dummy_lon
 
       t.timestamps null: false
     end

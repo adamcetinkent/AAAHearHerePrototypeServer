@@ -39,6 +39,11 @@ class PostsController < ApplicationController
       can_see = true
     end
     if can_see
+      if (post.user.id != for_user_id)
+        if !Friendship.are_friends(@authenticated_user, post.user.id)
+          Post.dummyLocations(post)
+        end
+      end
       render json: Post.render_json_full(post)
     else
       render json: :nothing, status: 401
@@ -159,6 +164,11 @@ class PostsController < ApplicationController
                     .limit(5)
       end
     end
+    if (by_user_id != for_user_id)
+      if !Friendship.are_friends(@authenticated_user, by_user_id)
+        Post.dummyLocations(posts)
+      end
+    end
     render json: Post.render_json_full(posts)
   end
 
@@ -183,6 +193,13 @@ class PostsController < ApplicationController
                         Post::POST_PRIVACY[:followers],
                         tags)
 
+    posts.each do |post|
+      if (post.user.id != for_user_id)
+        if !Friendship.are_friends(@authenticated_user, post.user.id)
+          Post.dummyLocations(posts)
+        end
+      end
+    end
     render json: Post.render_json_full(posts)
   end
 
@@ -211,6 +228,13 @@ class PostsController < ApplicationController
                         tags)
                 .limit(5)
 
+    posts.each do |post|
+      if (post.user.id != for_user_id)
+        if !Friendship.are_friends(@authenticated_user, post.user.id)
+          Post.dummyLocations(posts)
+        end
+      end
+    end
     render json: Post.render_json_full(posts)
   end
 
@@ -238,6 +262,13 @@ class PostsController < ApplicationController
                         follows.pluck(:followed_user_id).push(for_user_id),
                         tags)
                 .limit(5)
+    posts.each do |post|
+      if (post.user.id != for_user_id)
+        if !Friendship.are_friends(@authenticated_user, post.user.id)
+          Post.dummyLocations(posts)
+        end
+      end
+    end
     render json: Post.render_json_full(posts)
   end
 
@@ -307,6 +338,14 @@ class PostsController < ApplicationController
                               lonSW,
                               lonNE,
                               excludeIDs)
+    
+    posts.each do |post|
+      if (post.user.id != for_user_id)
+        if !Friendship.are_friends(@authenticated_user, post.user.id)
+          Post.dummyLocations(posts)
+        end
+      end
+    end
     render json: Post.render_json_user(posts)
   end
 
@@ -390,7 +429,7 @@ class PostsController < ApplicationController
 
   private
   def post_params
-    params.require(:post).permit(:user_id, :track, :lat, :lon, :message, :place_name, :google_place_id, :privacy, tags_attributes: [ :user_id ])
+    params.require(:post).permit(:user_id, :track, :lat, :lon, :message, :place_name, :google_place_id, :privacy, :dummy_lat, :dummy_lon, tags_attributes: [ :user_id ])
   end
 
 end

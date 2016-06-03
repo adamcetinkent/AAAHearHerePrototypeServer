@@ -26,4 +26,13 @@ class Friendship < ActiveRecord::Base
     end
   end
 
+  def self.are_friends(user, friend_id)
+    user.friend_users.each do |friend|
+      if friend.id == friend_id
+        return true
+      end
+    end
+    false
+  end
+
 end

@@ -17,6 +17,13 @@ class Post < ActiveRecord::Base
     :tagged     => 3
   }
 
+  def self.dummyLocations(posts)
+    posts.each do |post|
+      post.lat = post.dummy_lat
+      post.lon = post.dummy_lon
+    end
+  end
+
   def self.render_json_user(post)
     post.to_json(:include => :user)
   end
