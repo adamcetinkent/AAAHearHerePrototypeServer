@@ -1,9 +1,9 @@
 class LikesController < ApplicationController
-
-  #TODO: ADD SECURITY
+  before_action :authenticate
 
   def create
     like = Like.new(like_params)
+    like.user_id = @authenticated_user.id
     createdLike = Like.create_or_restore(like)
     if createdLike.post.user.id != createdLike.user.id
       notification = Notification.new(
@@ -20,21 +20,41 @@ class LikesController < ApplicationController
 
   def delete
     like = Like.with_deleted.find(params[:id])
-    if like.destroy
-      notifications = Notification.where(post_id: like.post_id, 
-                                         notification_type: Notification::NOTIFICATION_TYPE[:like_post])
-      notifications.each do |n|
-        n.destroy
+    if like.user_id == @authenticated_user.id
+      if like.destroy
+        notifications = Notification.where(post_id: like.post_id, 
+                                           notification_type: Notification::NOTIFICATION_TYPE[:like_post])
+        notifications.each do |n|
+          n.destroy
+        end
+        render :nothing => true, :status => 200
+      else
+        render :nothing => true, :status => 400
       end
-      render :nothing => true, :status => 200
     else
-      render :nothing => true, :status => 400
+      render :nothing => true, :status => 401
     end
+  end
+
+  protected
+  def authenticate
+    authenticate_token || render_unauthorised
+  end
+
+  def authenticate_token
+    authenticate_with_http_token do |token, options|
+      @authenticated_user = User.find_by(auth_token: token)
+    end
+  end
+
+  def render_unauthorised
+    self.headers['WWW-Authenticate'] = 'Token realm="Application"'
+    render json: 'Bad credentials', status: 401
   end
 
   private
   def like_params
-    params.require(:like).permit(:post_id, :user_id)
+    params.require(:like).permit(:post_id)
   end
 
 end

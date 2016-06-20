@@ -1033,3 +1033,5 @@ follow_request02_01 = FollowRequest.create(user_id: '2', requested_user_id: '1')
 follow_request04_01 = FollowRequest.create(user_id: '4', requested_user_id: '1')
 follow_request05_01 = FollowRequest.create(user_id: '5', requested_user_id: '1')
 follow_request06_01 = FollowRequest.create(user_id: '6', requested_user_id: '1')
+
+mute_00 = Mute.create(user_id: '1', post_id: '2')

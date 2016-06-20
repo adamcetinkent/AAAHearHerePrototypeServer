@@ -64,4 +64,7 @@ Rails.application.routes.draw do
   post    'notifications/read/:id',
                             :to => 'notifications#read'
 
+  # mutes
+  post    'mutes/:post_id/'     => 'mutes#create'
+
 end

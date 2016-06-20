@@ -285,13 +285,15 @@ class PostsController < ApplicationController
     for_user_id = @authenticated_user.id
     follows = User.find(for_user_id).follows
     tags = Tag.where(user_id: for_user_id).collect(&:post_id).flatten.uniq
+    mutes = Mute.where(user_id: for_user_id).collect(&:post_id).flatten.uniq
+    puts "MUTES: " + mutes.to_s
     posts = postsWithinBounds(follows.pluck(:followed_user_id).push(for_user_id),
                               tags,
                               lat_min,
                               lat_max,
                               lon_min,
                               lon_max,
-                              Array.new(1, 0))
+                              mutes)
     notifications = []
     posts.each do |post|
       recent_notification = Notification.where(
@@ -351,27 +353,29 @@ class PostsController < ApplicationController
 
   def postsWithinBounds(userIDs, tagIDs, latSW, latNE, lonSW, lonNE, excludeIDs)
     if (lonSW <= lonNE)
-      Post.where("id NOT IN (?)
-                  AND (user_id IN (?)
-                        OR id IN (?))
-                  AND lat BETWEEN ? AND ?
-                  AND lon BETWEEN ? AND ?",
-                  excludeIDs,
-                  userIDs,
-                  tagIDs,
-                  latSW, latNE,
-                  lonSW, lonNE)
+      allPosts =  Post.where(
+        "id NOT IN (?)
+         AND (user_id IN (?)
+          OR id IN (?))
+         AND lat BETWEEN ? AND ?
+         AND lon BETWEEN ? AND ?",
+         excludeIDs,
+         userIDs,
+         tagIDs,
+         latSW, latNE,
+         lonSW, lonNE)
     else
-      Post.where("id NOT IN (?)
-                  AND (user_id IN (?)
-                        OR id IN (?))
-                  AND lat BETWEEN ? AND ?
-                  AND (lon > ? OR lon < ?)",
-                  excludeIDs,
-                  userIDS,
-                  tagIDs,
-                  latSW, latNE,
-                  lonSW, lonNE)
+      Post.where(
+        "id NOT IN (?)
+         AND (user_id IN (?)
+          OR id IN (?))
+         AND lat BETWEEN ? AND ?
+         AND (lon > ? OR lon < ?)",
+         excludeIDs,
+         userIDS,
+         tagIDs,
+         latSW, latNE,
+         lonSW, lonNE)
     end
   end
 
