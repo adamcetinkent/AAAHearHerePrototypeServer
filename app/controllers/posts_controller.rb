@@ -234,6 +234,8 @@ class PostsController < ApplicationController
           Post.dummyLocations(posts)
         end
       end
+      post.mute = Mute.where(user_id: for_user_id, post_id: post.id).take
+      puts "MUTE: " + post.mute.to_json
     end
     render json: Post.render_json_full(posts)
   end

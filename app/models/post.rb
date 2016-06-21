@@ -10,6 +10,8 @@ class Post < ActiveRecord::Base
 
   accepts_nested_attributes_for :tags
 
+  attr_accessor :mute
+
   POST_PRIVACY = {
     :public     => 0,
     :friends    => 1,
@@ -25,7 +27,10 @@ class Post < ActiveRecord::Base
   end
 
   def self.render_json_user(post)
-    post.to_json(:include => :user)
+    post.to_json(
+      :include => :user,
+      :methods => :mute_id
+    )
   end
 
   def self.render_json_full(post)
@@ -35,7 +40,8 @@ class Post < ActiveRecord::Base
         {:comments  => {:include => :user}},
         {:likes     => {:include => :user}},
         {:tags      => {:include => :user}}
-      ]
+      ],
+      :methods => :mute
     )
   end
 

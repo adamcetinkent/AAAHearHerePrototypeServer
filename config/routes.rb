@@ -66,5 +66,6 @@ Rails.application.routes.draw do
 
   # mutes
   post    'mutes/:post_id/'     => 'mutes#create'
+  delete  'mutes/:post_id/'     => 'mutes#delete'
 
 end
