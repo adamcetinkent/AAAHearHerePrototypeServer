@@ -6,32 +6,24 @@ class PostsController < ApplicationController
     puts 'POST: '+post.to_s
     for_user_id = @authenticated_user.id
     post_user = post.user
-    privacy = User.is_allowed_to_see(post.user.id, for_user_id)
+    relationship = User.relationship(post.user.id, for_user_id)
     can_see = false
-    case privacy
-    when User::PRIVACY[:self_good] then
+    case relationship
+    when User::RELATIONSHIP[:self] then
       can_see = true
-    when User::PRIVACY[:none_good] then
+    when User::RELATIONSHIP[:none] then
       if post.privacy == Post::POST_PRIVACY[:public]
         can_see = true
       end
-    when User::PRIVACY[:friends_bad] then
-      if post.privacy == Post::POST_PRIVACY[:public]
+    when User::RELATIONSHIP[:friend] then
+      if (post.relationship == Post::POST_PRIVACY[:public] ||
+          post.relationship == Post::POST_PRIVACY[:friends])
         can_see = true
       end
-    when User::PRIVACY[:friends_good] then
-      if (post.privacy == Post::POST_PRIVACY[:public] ||
-          post.privacy == Post::POST_PRIVACY[:friends])
-        can_see = true
-      end
-    when User::PRIVACY[:followers_bad] then
-      if post.privacy == Post::POST_PRIVACY[:public]
-        can_see = true
-      end 
-    when User::PRIVACY[:followers_good] then
-      if (post.privacy == Post::POST_PRIVACY[:public] ||
-          post.privacy == Post::POST_PRIVACY[:friends] ||
-          post.privacy == Post::POST_PRIVACY[:followers])
+    when User::RELATIONSHIP[:follower] then
+      if (post.relationship == Post::POST_PRIVACY[:public] ||
+          post.relationship == Post::POST_PRIVACY[:friends] ||
+          post.relationship == Post::POST_PRIVACY[:followers])
         can_see = true
       end 
     end
@@ -50,19 +42,6 @@ class PostsController < ApplicationController
     end
   end
 
-  def user_privacy
-    by_user_id = params[:by_user_id].to_i
-    for_user_id = @authenticated_user.id
-    privacy = User.is_allowed_to_see(by_user_id, for_user_id)
-    puts "Privacy: " + privacy.to_s
-    privacyBool = (privacy == User::PRIVACY[:self_good] || 
-                   privacy == User::PRIVACY[:none_good] || 
-                   privacy == User::PRIVACY[:friends_good] || 
-                   privacy == User::PRIVACY[:followers_good])
-    puts "PrivacyBool: " + privacyBool.to_s
-    render json: privacyBool.to_s
-  end
-
   def by_user
     if params[:date] then
       date = params[:date].to_datetime
@@ -71,8 +50,8 @@ class PostsController < ApplicationController
     end
     by_user_id = params[:by_user_id].to_i
     for_user_id = @authenticated_user.id
-    privacy = User.is_allowed_to_see(by_user_id, for_user_id)
-    if privacy == User::PRIVACY[:self_good]
+    relationship = User.relationship(by_user_id, for_user_id)
+    if relationship == User::RELATIONSHIP[:self]
       # all posts:   0,1,2,3
       posts = Post.order(created_at: :desc)
                   .where("created_at < ?
@@ -87,8 +66,8 @@ class PostsController < ApplicationController
         userTags << tag.post_id if tag.user_id == for_user_id
       end
       #puts userTags
-      case privacy
-      when User::PRIVACY[:none_good] then
+      case relationship
+      when User::RELATIONSHIP[:none] then
         # public posts:   0
         # tagged posts:   0,1,2,3
         posts = Post.order(created_at: :desc)
@@ -101,20 +80,7 @@ class PostsController < ApplicationController
                            Post::POST_PRIVACY[:public],
                            userTags)
                     .limit(5)
-      when User::PRIVACY[:friends_bad] then
-        # public posts:   0
-        # tagged posts:   0,1,2,3
-        posts = Post.order(created_at: :desc)
-                    .where("created_at < ? AND
-                            user_id = ? AND
-                              (privacy = ?
-                              OR id IN (?))",
-                           date,
-                           by_user_id,
-                           Post::POST_PRIVACY[:public],
-                           userTags)
-                    .limit(5)
-      when User::PRIVACY[:friends_good] then
+      when User::RELATIONSHIP[:friend] then
         # public posts:   0
         # friends posts:  1
         # tagged posts:   0,1,2,3
@@ -130,20 +96,7 @@ class PostsController < ApplicationController
                            Post::POST_PRIVACY[:friends],
                            userTags)
                     .limit(5)
-      when User::PRIVACY[:followers_bad] then
-        # public posts:   0
-        # tagged posts:   0,1,2,3
-        posts = Post.order(created_at: :desc)
-                    .where("created_at < ? AND
-                            user_id = ? AND
-                              (privacy = ?
-                              OR id IN (?))",
-                           date,
-                           by_user_id,
-                           Post::POST_PRIVACY[:public],
-                           userTags)
-                    .limit(5)
-      when User::PRIVACY[:followers_good] then
+      when User::RELATIONSHIP[:follower] then
         # public posts:   0
         # friends posts:  1
         # follower posts: 2
@@ -174,8 +127,13 @@ class PostsController < ApplicationController
 
   def by_user_count
     user_id = params[:user_id].to_i
-    post_count = Post.where(user_id: user_id).count
-    render json: post_count.to_s
+    privacy = User.privacy(user_id, @authenticated_user.id)
+    if (privacy)
+      post_count = Post.where(user_id: user_id).count
+      render json: post_count.to_s
+    else
+      render json: -1
+    end
   end
 
   def for_user

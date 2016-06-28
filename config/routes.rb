@@ -10,13 +10,19 @@ Rails.application.routes.draw do
   get	    'users/:id' 		      => 'users#show'
   get     'users/for/:id/search/:query',
                             :to => 'users#search_users', :constraints => {:query => /.*/}
+  get     'users/profile_privacy/:target_id/',
+                            :to => 'users#profile_privacy'
+  patch   'users/profile_privacy/:level',
+                            :to => 'users#update_profile_privacy'
+  patch   'users/search_privacy/:level',
+                            :to => 'users#update_search_privacy'
+  patch   'users/auto_accept/:level',
+                            :to => 'users#update_auto_accept'
 
   #posts
   post	  'posts' 		          => 'posts#create'
   #get	    'posts' 		          => 'posts#index' # TODO: DELETE FOR SECURITY!
   get	    'posts/:id' 		      => 'posts#show'
-  get     'posts/privacy/by/:by_user_id/',
-                            :to => 'posts#user_privacy'
   get     'posts/by/:by_user_id(/before/:date)(/exclude/:exclude)',
                             :to => 'posts#by_user',
                             :constraints => {:date => /\d{4}-\d{2}-\d{2}%20\d{2}:\d{2}:\d{2}[.][0-9]+/,

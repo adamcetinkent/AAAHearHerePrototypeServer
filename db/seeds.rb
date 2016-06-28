@@ -79,6 +79,11 @@ test18  = User.create!(first_name: 'Dave',   last_name: 'Rosenthalescu',     ema
                        bio: "",
                        url: "",
                        fb_user_id: "100011399189719",    auto_accept: '2', profile_privacy: '2', search_privacy: '2')
+cam1    = User.create!(first_name: 'Camellia',  last_name: 'Elerman',       email: '',
+                       bio: "",
+                       url: "",
+                       fb_user_id: "10153522479272307",  auto_accept: '0', profile_privacy: '0', search_privacy: '0',
+                       auth_token: "token2")
 
 post01 = Post.create!(user_id: '1',   track: '2Iccm3cKBQHWt5yk0yX9nh', 
                       lat:      '51.5282212',  lon:       '-0.1281044',

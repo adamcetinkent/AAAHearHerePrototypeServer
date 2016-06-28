@@ -7,9 +7,9 @@ class CreateUsers < ActiveRecord::Migration
       t.string  :bio
       t.string  :url
       t.string  :fb_user_id
-      t.integer :auto_accept
-      t.integer :profile_privacy
-      t.integer :search_privacy
+      t.integer :auto_accept,     :default => 0
+      t.integer :profile_privacy, :default => 0
+      t.integer :search_privacy,  :default => 0
       t.string  :auth_token
 
       t.timestamps

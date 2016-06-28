@@ -13,19 +13,29 @@ class User < ActiveRecord::Base
   has_many :followed_requests, :class_name => "FollowRequest", :foreign_key => "requested_user_id"
   has_many :notifications, :foreign_key => "for_user_id"
 
-  PRIVACY = {
-    :self_good      => 31,
-    :none_good      => 01,
-    :friends_bad    => 10,
-    :friends_good   => 11,
-    :followers_bad  => 20,
-    :followers_good => 21
+  RELATIONSHIP = {
+    :self           => 0,
+    :follower       => 1,
+    :friend         => 2,
+    :none           => 3
   }
 
   PROFILE_PRIVACY = {
     :public     => 0,
     :friends    => 1,
     :followers  => 2
+  }
+
+  SEARCH_PRIVACY = {
+    :public   => 0,
+    :friends  => 1,
+    :private  => 2
+  }
+
+  AUTO_ACCEPT = {
+    :manual     => 0,
+    :friends    => 1,
+    :automatic  => 2
   }
 
   def full_name
@@ -48,34 +58,31 @@ class User < ActiveRecord::Base
     )
   end
 
-  def self.is_allowed_to_see(by_user_id, for_user_id)
-    if by_user_id == for_user_id
-      puts "FOR SELF!"
-      PRIVACY[:self_good]
+  def self.relationship(target_id, source_id)
+    if target_id == source_id
+      RELATIONSHIP[:self]
     else
-      byUser = User.find(by_user_id)
-      if !User.find(for_user_id).follows
-              .where(followed_user_id: by_user_id).blank?
-        PRIVACY[:followers_good]
+      if !User.find(source_id).follows
+              .where(followed_user_id: target_id).blank?
+        RELATIONSHIP[:follower]
       else
-        if byUser.profile_privacy == PROFILE_PRIVACY[:followers]
-          PRIVACY[:followers_bad]
+        if !User.find(source_id).friendships
+                .where(friend_user_id: target_id).blank?
+          RELATIONSHIP[:friend]
         else
-          if !User.find(for_user_id).friendships
-                  .where(friend_user_id: by_user_id).blank?
-              PRIVACY[:friends_good]
-          else
-            if byUser.profile_privacy == PROFILE_PRIVACY[:friends]
-              PRIVACY[:friends_bad]
-            else
-              if byUser.profile_privacy == PROFILE_PRIVACY[:public]
-                PRIVACY[:none_good]
-              end
-            end
-          end
+          RELATIONSHIP[:none]
         end
       end
     end
+  end
+
+  def self.privacy(target_id, source_id)
+    relationship = User.relationship(target_id, source_id)
+    target_privacy = User.find(target_id).profile_privacy
+    (relationship == RELATIONSHIP[:self]) ||
+    (target_privacy == PROFILE_PRIVACY[:public]) ||
+    (relationship == RELATIONSHIP[:follower]) ||
+    (relationship == RELATIONSHIP[:friend] && (target_privacy == PROFILE_PRIVACY[:friends]))
   end
 
   def new_auth_token
