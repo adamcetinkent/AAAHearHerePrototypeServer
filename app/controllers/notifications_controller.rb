@@ -5,7 +5,20 @@ class NotificationsController < ApplicationController
   #  puts "NOTIFICATION: " + notification_type.to_s + " " + notification_link.to_s
   #end
 
-  def for_user
+  def all
+    for_user_id = @authenticated_user.id
+    notifications = Notification.where(for_user_id: for_user_id, notification_type: [0,1,2,3,4])
+                                .order(created_at: :desc)
+    notifications.each do |n|
+      if (n.sent_at == nil)
+        n.sent_at = Time.now
+        n.save
+      end
+    end
+    render json: Notification.render_json_full(notifications)
+  end
+
+  def unsent
     for_user_id = @authenticated_user.id
     notifications = Notification.where(for_user_id: for_user_id, read_at: nil, sent_at: nil)
     notifications.each do |n|

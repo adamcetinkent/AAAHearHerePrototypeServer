@@ -10,30 +10,35 @@ class PostsController < ApplicationController
     can_see = false
     case relationship
     when User::RELATIONSHIP[:self] then
+      #puts 'RELATIONSHIP: self'
       can_see = true
     when User::RELATIONSHIP[:none] then
+      puts 'RELATIONSHIP: none'
       if post.privacy == Post::POST_PRIVACY[:public]
         can_see = true
       end
     when User::RELATIONSHIP[:friend] then
-      if (post.relationship == Post::POST_PRIVACY[:public] ||
-          post.relationship == Post::POST_PRIVACY[:friends])
+      #puts 'RELATIONSHIP: friend'
+      if (post.privacy == Post::POST_PRIVACY[:public] ||
+          post.privacy == Post::POST_PRIVACY[:friends])
         can_see = true
       end
     when User::RELATIONSHIP[:follower] then
-      if (post.relationship == Post::POST_PRIVACY[:public] ||
-          post.relationship == Post::POST_PRIVACY[:friends] ||
-          post.relationship == Post::POST_PRIVACY[:followers])
+      #puts 'RELATIONSHIP: follower'
+      if (post.privacy == Post::POST_PRIVACY[:public] ||
+          post.privacy == Post::POST_PRIVACY[:friends] ||
+          post.privacy == Post::POST_PRIVACY[:followers])
         can_see = true
       end 
     end
     if !can_see && !post.tags.where(user_id: for_user_id).blank?
+      #puts 'RELATIONSHIP: tagged'
       can_see = true
     end
     if can_see
       if (post.user.id != for_user_id)
         if !Friendship.are_friends(@authenticated_user, post.user.id)
-          Post.dummyLocations(post)
+          Post.dummyLocation(post)
         end
       end
       render json: Post.render_json_full(post)

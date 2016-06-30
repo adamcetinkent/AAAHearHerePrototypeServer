@@ -66,7 +66,9 @@ Rails.application.routes.draw do
   get     'follows/count/out/:user_id/' => 'follows#follows_count_out'
 
   # notifications
-  get     'notifications/'      => 'notifications#for_user'
+  get     'notifications/unsent/',
+                            :to => 'notifications#unsent'
+  get     'notifications/all/'  => 'notifications#all'
   post    'notifications/read/:id',
                             :to => 'notifications#read'
 

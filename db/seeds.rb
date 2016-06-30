@@ -1040,3 +1040,69 @@ follow_request05_01 = FollowRequest.create(user_id: '5', requested_user_id: '1')
 follow_request06_01 = FollowRequest.create(user_id: '6', requested_user_id: '1')
 
 mute_00 = Mute.create(user_id: '1', post_id: '2')
+
+notification_comment_01 = Notification.create(for_user_id: '1', by_user_id: '2', post_id: '1',
+                                              notification_type: '2',
+                                              notification_text: 'Anastasia Perkins commented on your post',
+                                              created_at: '2016-01-30 12:05:00.00',
+                                              read_at:    '2016-01-30 12:10:00.00')
+notification_comment_02 = Notification.create(for_user_id: '1', by_user_id: '3', post_id: '1',
+                                              notification_type: '2',
+                                              notification_text: 'Donna McDonaldman commented on your post',
+                                              created_at: '2016-01-30 12:10:00.00',
+                                              read_at:    '2016-01-30 12:15:00.00')
+
+notification_like_01 = Notification.create(for_user_id: '1', by_user_id: '3', post_id: '1',
+                                           notification_type: '1',
+                                           notification_text: 'Donna McDonaldman liked your post',
+                                           created_at: '2016-01-30 12:06:00.00',
+                                           read_at:    '2016-01-30 12:11:00.00')
+notification_like_02 = Notification.create(for_user_id: '1', by_user_id: '2', post_id: '1',
+                                           notification_type: '1',
+                                           notification_text: 'Anastasia Perkins liked your post',
+                                           created_at: '2016-01-30 12:04:00.00',
+                                           read_at:    '2016-01-30 12:09:00.00')
+
+notification_follow_01 = Notification.create(for_user_id: '1', by_user_id: '3',
+                                             notification_type: '3',
+                                             notification_text: 'Donna McDonaldman started following you',
+                                             created_at: '2016-01-30 12:00:00.00',
+                                             read_at:    '2016-01-30 12:15:00.00')
+
+notification_request_01 = Notification.create(for_user_id: '1', by_user_id: '2',
+                                              notification_type: '4',
+                                              notification_text: 'Donna McDonaldman sent you a follow request',
+                                              created_at: '2016-01-30 12:15:00.00',
+                                              read_at:    '2016-01-30 12:20:00.00')
+notification_request_02 = Notification.create(for_user_id: '1', by_user_id: '4',
+                                              notification_type: '4',
+                                              notification_text: 'Mark Coffee sent you a follow request',
+                                              created_at: '2016-02-30 12:00:00.00',
+                                              read_at:    '2016-02-30 12:05:00.00')
+notification_request_03 = Notification.create(for_user_id: '1', by_user_id: '5',
+                                              notification_type: '4',
+                                              notification_text: 'James East sent you a follow request',
+                                              created_at: '2016-03-30 12:00:00.00',
+                                              read_at:    '2016-03-30 12:05:00.00')
+notification_request_04 = Notification.create(for_user_id: '1', by_user_id: '6',
+                                              notification_type: '4',
+                                              notification_text: 'Martin Martinazziman sent you a follow request',
+                                              created_at: '2016-05-30 12:00:00.00',
+                                              read_at:    '2016-05-30 12:05:00.00')
+
+notification_post_02 = Notification.create(for_user_id: '1', by_user_id: '2', post_id: '2',
+                                           notification_type: '0',
+                                           notification_text: 'Anastasia Perkins posted to Hear Here',
+                                           created_at: '2016-01-31 01:59:31.31',
+                                           read_at:    '2016-01-31 02:04:31.31')
+notification_post_03 = Notification.create(for_user_id: '1', by_user_id: '3', post_id: '3',
+                                           notification_type: '0',
+                                           notification_text: 'Donna McDonaldman posted to Hear Here',
+                                           created_at: '2016-02-01 00:41:46.46',
+                                           read_at:    '2016-02-01 00:46:46.46')
+notification_post_23 = Notification.create(for_user_id: '1', by_user_id: '8', post_id: '23',
+                                           notification_type: '0',
+                                           notification_text: 'Scott Aukerman posted to Hear Here',
+                                           created_at: '2016-02-11 23:00:58.58',
+                                           read_at:    '2016-02-11 23:05:58.58')
+

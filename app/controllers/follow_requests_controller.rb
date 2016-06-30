@@ -161,7 +161,13 @@ class FollowRequestsController < ApplicationController
   end
 
   def delete
-    if FollowRequest.with_deleted.find(params[:id]).destroy
+    request_id = params[:id].to_i
+    followRequest = FollowRequest.with_deleted.find(request_id)
+    if followRequest.destroy
+      notifications = Notification.where(notification_type: Notification::NOTIFICATION_TYPE[:new_follow_request], 
+                                         for_user_id: followRequest.requested_user_id,
+                                         by_user_id: followRequest.user_id)
+      notifications.destroy_all
       render :nothing => true, :status => 200
     else
       render :nothing => true, :status => 400

@@ -1,6 +1,8 @@
 class LikesController < ApplicationController
   before_action :authenticate
 
+  # add checks that authenticated user is allowed to do things!
+
   def create
     like = Like.new(like_params)
     like.user_id = @authenticated_user.id
