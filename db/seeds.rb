@@ -1082,13 +1082,11 @@ notification_request_02 = Notification.create(for_user_id: '1', by_user_id: '4',
 notification_request_03 = Notification.create(for_user_id: '1', by_user_id: '5',
                                               notification_type: '4',
                                               notification_text: 'James East sent you a follow request',
-                                              created_at: '2016-03-30 12:00:00.00',
-                                              read_at:    '2016-03-30 12:05:00.00')
+                                              created_at: '2016-03-30 12:00:00.00')
 notification_request_04 = Notification.create(for_user_id: '1', by_user_id: '6',
                                               notification_type: '4',
                                               notification_text: 'Martin Martinazziman sent you a follow request',
-                                              created_at: '2016-05-30 12:00:00.00',
-                                              read_at:    '2016-05-30 12:05:00.00')
+                                              created_at: '2016-05-30 12:00:00.00')
 
 notification_post_02 = Notification.create(for_user_id: '1', by_user_id: '2', post_id: '2',
                                            notification_type: '0',
@@ -1105,4 +1103,61 @@ notification_post_23 = Notification.create(for_user_id: '1', by_user_id: '8', po
                                            notification_text: 'Scott Aukerman posted to Hear Here',
                                            created_at: '2016-02-11 23:00:58.58',
                                            read_at:    '2016-02-11 23:05:58.58')
+notification_post_39 = Notification.create(for_user_id: '1', by_user_id: '8', post_id: '39',
+                                           notification_type: '0',
+                                           notification_text: 'Scott Aukerman posted to Hear Here',
+                                           created_at: '2016-02-20 06:25:55.55',
+                                           read_at:    '2016-02-20 06:30:55.55')
+notification_post_43 = Notification.create(for_user_id: '1', by_user_id: '3', post_id: '43',
+                                           notification_type: '0',
+                                           notification_text: 'Donna McDonaldman posted to Hear Here',
+                                           created_at: '2016-02-22 11:08:10.10',
+                                           read_at:    '2016-02-22 11:13:10.10')
+notification_post_45 = Notification.create(for_user_id: '1', by_user_id: '8', post_id: '45',
+                                           notification_type: '0',
+                                           notification_text: 'Scott Aukerman posted to Hear Here',
+                                           created_at: '2016-02-23 10:49:26.26',
+                                           read_at:    '2016-02-23 10:54:26.26')
+notification_post_47 = Notification.create(for_user_id: '1', by_user_id: '8', post_id: '47',
+                                           notification_type: '0',
+                                           notification_text: 'Scott Aukerman posted to Hear Here',
+                                           created_at: '2016-02-24 20:12:29.29',
+                                           read_at:    '2016-02-24 20:17:29.29')
+notification_post_59 = Notification.create(for_user_id: '1', by_user_id: '3', post_id: '59',
+                                           notification_type: '0',
+                                           notification_text: 'Donna McDonaldman posted to Hear Here',
+                                           created_at: '2016-03-01 23:31:12.12',
+                                           read_at:    '2016-03-01 23:36:12.12')
+notification_post_63 = Notification.create(for_user_id: '1', by_user_id: '3', post_id: '63',
+                                           notification_type: '0',
+                                           notification_text: 'Donna McDonaldman posted to Hear Here',
+                                           created_at: '2016-03-03 10:35:02.02',
+                                           read_at:    '2016-03-03 10:40:02.02')
+notification_post_75 = Notification.create(for_user_id: '1', by_user_id: '8', post_id: '75',
+                                           notification_type: '0',
+                                           notification_text: 'Scott Aukerman posted to Hear Here',
+                                           created_at: '2016-03-10 21:43:12.12',
+                                           read_at:    '2016-03-10 21:48:12.12')
+notification_post_77 = Notification.create(for_user_id: '1', by_user_id: '2', post_id: '77',
+                                           notification_type: '0',
+                                           notification_text: 'Anastasia Perkins posted to Hear Here',
+                                           created_at: '2016-03-12 01:01:55.55',
+                                           read_at:    '2016-03-12 01:06:55.55')
+notification_post_85 = Notification.create(for_user_id: '1', by_user_id: '3', post_id: '85',
+                                           notification_type: '0',
+                                           notification_text: 'Donna McDonaldman posted to Hear Here',
+                                           created_at: '2016-03-15 18:56:10.10',
+                                           read_at:    '2016-03-15 19:01:10.10')
+notification_post_95 = Notification.create(for_user_id: '1', by_user_id: '3', post_id: '95',
+                                           notification_type: '0',
+                                           notification_text: 'Donna McDonaldman posted to Hear Here',
+                                           created_at: '2016-03-20 14:38:24.24')
+notification_post_98 = Notification.create(for_user_id: '1', by_user_id: '8', post_id: '98',
+                                           notification_type: '0',
+                                           notification_text: 'Scott Aukerman posted to Hear Here',
+                                           created_at: '2016-03-22 08:00:58.58')
+notification_post_100 = Notification.create(for_user_id: '1', by_user_id: '8', post_id: '100',
+                                           notification_type: '0',
+                                           notification_text: 'Scott Aukerman posted to Hear Here',
+                                           created_at: '2016-03-23 12:00:00.00')
 

@@ -35,7 +35,7 @@ class NotificationsController < ApplicationController
     if notification.for_user_id == for_user_id
       notification.read_at = Time.now
       notification.save
-      render json: notification.to_json
+      render json: Notification.render_json_full(notification)
     else
       render json: :nothing, status: 401
     end
